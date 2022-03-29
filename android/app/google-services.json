@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "823612286899",
+    "project_id": "newalbanote",
+    "storage_bucket": "newalbanote.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:823612286899:android:9f43fb2c77501efb0b4dc6",
+        "android_client_info": {
+          "package_name": "com.balc2013.albanote"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "823612286899-8f8sr5b7141gqa9fo90k9u2lkv5eohgp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAodln_un5VuyiNV5KcYUbJUIQpGN43lZI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "823612286899-8f8sr5b7141gqa9fo90k9u2lkv5eohgp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "823612286899-dkjghc09s26e3ob1sc8fiaf2o7442j5a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.blac2013.albanoteProject"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:823612286899:android:892f332c1fc239cb0b4dc6",
+        "android_client_info": {
+          "package_name": "com.blac2013.albanote_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "823612286899-8f8sr5b7141gqa9fo90k9u2lkv5eohgp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAodln_un5VuyiNV5KcYUbJUIQpGN43lZI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "823612286899-8f8sr5b7141gqa9fo90k9u2lkv5eohgp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "823612286899-dkjghc09s26e3ob1sc8fiaf2o7442j5a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.blac2013.albanoteProject"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

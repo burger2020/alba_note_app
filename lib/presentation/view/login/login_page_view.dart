@@ -4,14 +4,14 @@ import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class LoginPageView extends StatefulWidget {
+  const LoginPageView({Key? key}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginPageView> createState() => _LoginPageViewState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageViewState extends State<LoginPageView> {
   String _accessToken = "";
   bool _isLoggedIn = false;
 

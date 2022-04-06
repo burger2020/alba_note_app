@@ -1,4 +1,4 @@
-import 'package:albanote_project/login_page.dart';
+import 'package:albanote_project/presentation/view/login/login_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
       ),
-      home: const LoginPage(),
+      home: const LoginPageView(),
     );
   }
 }

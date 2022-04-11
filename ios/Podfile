@@ -41,7 +41,7 @@ post_install do |installer|
       build_configuration.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64 i386'
     end
     target.build_configurations.each do |config|
-      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '9.0'
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '11.0'
     end
   end
 end

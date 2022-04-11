@@ -109,8 +109,11 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _logoutGoogle() async {
     try {
-      var result = await GoogleSignIn().signOut();
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signOut();
+      final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
+      googleAuth?.idToken;
+      /// 서버로 idToken 전송
     } catch (error) {
       debugPrint("google signin error = " + error.toString());
     }

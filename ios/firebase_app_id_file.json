@@ -1,7 +1,7 @@
 {
   "file_generated_by": "FlutterFire CLI",
   "purpose": "FirebaseAppID & ProjectID for this Firebase app in this directory",
-  "GOOGLE_APP_ID": "1:427628788483:ios:6b4be84354a54ebe564736",
-  "FIREBASE_PROJECT_ID": "albanote-renewal",
-  "GCM_SENDER_ID": "427628788483"
+  "GOOGLE_APP_ID": "1:823612286899:ios:9c69e9ec9d3906940b4dc6",
+  "FIREBASE_PROJECT_ID": "newalbanote",
+  "GCM_SENDER_ID": "823612286899"
 }

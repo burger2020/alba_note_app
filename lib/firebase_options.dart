@@ -40,20 +40,21 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDm57mnNMIm4zPOlDe6oG7atC_crxss4yM',
-    appId: '1:427628788483:android:d3fbf9cba7d4e53b564736',
-    messagingSenderId: '427628788483',
-    projectId: 'albanote-renewal',
-    storageBucket: 'albanote-renewal.appspot.com',
+    apiKey: 'AIzaSyAodln_un5VuyiNV5KcYUbJUIQpGN43lZI',
+    appId: '1:823612286899:android:892f332c1fc239cb0b4dc6',
+    messagingSenderId: '823612286899',
+    projectId: 'newalbanote',
+    storageBucket: 'newalbanote.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyD0spADbfmdohqM94sz0U8V5MZgN8VdP0o',
-    appId: '1:427628788483:ios:6b4be84354a54ebe564736',
-    messagingSenderId: '427628788483',
-    projectId: 'albanote-renewal',
-    storageBucket: 'albanote-renewal.appspot.com',
-    iosClientId: '427628788483-u2723bg0q6vkevti8529n466kagq3ef0.apps.googleusercontent.com',
+    apiKey: 'AIzaSyCxF3prpDbWtcTt7lgkTqkIWYzKAvpui50',
+    appId: '1:823612286899:ios:9c69e9ec9d3906940b4dc6',
+    messagingSenderId: '823612286899',
+    projectId: 'newalbanote',
+    storageBucket: 'newalbanote.appspot.com',
+    androidClientId: '823612286899-jpsgr1o5bjdp9780bsfq2091vikf143v.apps.googleusercontent.com',
+    iosClientId: '823612286899-dkjghc09s26e3ob1sc8fiaf2o7442j5a.apps.googleusercontent.com',
     iosBundleId: 'com.blac2013.albanoteProject',
   );
 }

@@ -1,4 +1,3 @@
-import 'package:albanote_project/presentation/view/login/login_page_view.dart';
 import 'package:albanote_project/root.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';

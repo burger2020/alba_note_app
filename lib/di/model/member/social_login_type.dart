@@ -1,0 +1,4 @@
+enum SocialLoginType {
+  NAVER, KAKAO, GOOGLE, APPLE, //NAVER, FIREBASE_PHONE
+  TEST
+}

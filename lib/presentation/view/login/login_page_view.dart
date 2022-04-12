@@ -1,4 +1,5 @@
 import 'package:albanote_project/controller/root_controller.dart';
+import 'package:albanote_project/etc/custom_class/base_view.dart';
 import 'package:albanote_project/presentation/view_model/login/login_page_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,46 +7,47 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
-class LoginPageView extends GetView<LoginPageViewModel> {
+class LoginPageView extends BaseView<LoginPageViewModel> {
   const LoginPageView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: GetBuilder<RootController>(
-        builder: (rootController) {
-          return Column(
-            children: [
-              // ElevatedButton(onPressed: _loginNaver, child: const Text("naver login")),
-              // ElevatedButton(onPressed: _logoutNaver, child: const Text("naver logout")),
-              ElevatedButton(
-                  onPressed: () {
-                    _loginKakao(rootController);
-                  },
-                  child: const Text("kakao login")),
-              // ElevatedButton(onPressed: _logoutKakao(rootController), child: const Text("kakao logout")),
-              ElevatedButton(
-                  onPressed: () {
-                    _loginGoogle(rootController);
-                  },
-                  child: const Text("google login")),
-              // ElevatedButton(onPressed: _logoutGoogle(rootController), child: const Text("google logout"))
-            ],
-          );
-        },
+    controller.checkSelectMemberType();
+
+    return progressWidget(
+      child: Scaffold(
+        appBar: AppBar(),
+        body: GetBuilder<RootController>(
+          builder: (rootController) {
+            return Column(
+              children: [
+                // ElevatedButton(onPressed: _loginNaver, child: const Text("naver login")),
+                // ElevatedButton(onPressed: _logoutNaver, child: const Text("naver logout")),
+                ElevatedButton(
+                    onPressed: () {
+                      _loginKakao(rootController);
+                    },
+                    child: const Text("kakao login")),
+                // ElevatedButton(onPressed: _logoutKakao(rootController), child: const Text("kakao logout")),
+                ElevatedButton(
+                    onPressed: () {
+                      _loginGoogle(rootController);
+                    },
+                    child: const Text("google login")),
+                // ElevatedButton(onPressed: _logoutGoogle(rootController), child: const Text("google logout"))
+              ],
+            );
+          },
+        ),
       ),
     );
   }
-
-  /// login
-  void _setLoginInfo(String idToken, String accessToken) async {}
 
   void _loginKakao(RootController rootController) async {
     if (await isKakaoTalkInstalled()) {
       try {
         var user = await UserApi.instance.loginWithKakaoTalk();
-        _setLoginInfo(user.idToken.toString(), user.accessToken);
+        controller.postLogin(user.idToken.toString(), user.accessToken);
         debugPrint('카카오톡으로 로그인 성공');
       } catch (error) {
         debugPrint('카카오톡으로 로그인 실패 $error');
@@ -67,7 +69,7 @@ class LoginPageView extends GetView<LoginPageViewModel> {
     } else {
       try {
         var user = await UserApi.instance.loginWithKakaoAccount();
-        _setLoginInfo(user.idToken.toString(), user.accessToken);
+        controller.postLogin(user.idToken.toString(), user.accessToken);
         debugPrint('카카오계정으로 로그인 성공');
       } catch (error) {
         debugPrint('카카오계정으로 로그인 실패 $error');

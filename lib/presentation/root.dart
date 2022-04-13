@@ -10,10 +10,19 @@ class Root extends GetView<RootController> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => controller.isAuth.value ? const AppView() : onLogout());
+    return Obx(() {
+      switch (controller.isAuth.value) {
+        case RootState.APP:
+          return const AppView();
+        case RootState.LOGIN:
+          return onLogout();
+        default:
+          return Scaffold(body: Container(color: Colors.orange));
+      }
+    });
   }
 
-  Widget onLogout(){
+  Widget onLogout() {
     controller.setLogoutState();
     return const LoginPageView();
   }

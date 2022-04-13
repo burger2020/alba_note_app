@@ -1,6 +1,7 @@
-import 'package:albanote_project/data/repository/dio_interceptors.dart';
-import 'package:albanote_project/data/repository/login/common_repository_impl.dart';
-import 'package:albanote_project/data/repository/login/login_repository_impl.dart';
+import 'package:albanote_project/data/repository/config/dio_interceptors.dart';
+import 'package:albanote_project/data/repository/common_repository_impl.dart';
+import 'package:albanote_project/data/repository/login_repository_impl.dart';
+import 'package:albanote_project/data/repository/member_repository_impl.dart';
 import 'package:albanote_project/domain/repository/local/local_shared_preferences.dart';
 import 'package:albanote_project/presentation/view_model/app/app_view_model.dart';
 import 'package:albanote_project/presentation/view_model/login/login_page_view_model.dart';
@@ -20,10 +21,11 @@ class InitBinding extends Bindings {
 
     var commonRepository = CommonRepositoryImpl(dio, localSharedPreferences);
     var loginRepository = LoginRepositoryImpl(dio);
+    var memberRepository = MemberRepositoryImpl(dio, localSharedPreferences);
 
-    Get.put(RootController(localSharedPreferences, commonRepository));
+    Get.put(RootController(localSharedPreferences, commonRepository, memberRepository));
     Get.put(BottomNavController(), permanent: true);
     Get.put(AppViewModel(localSharedPreferences));
-    Get.put(LoginPageViewModel(loginRepository, localSharedPreferences), permanent: true);
+    Get.put(LoginPageViewModel(loginRepository, localSharedPreferences, memberRepository), permanent: true);
   }
 }

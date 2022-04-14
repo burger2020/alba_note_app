@@ -1,4 +1,4 @@
-import 'package:albanote_project/data/entity/response_entity.dart';
+import 'package:albanote_project/data/entity/common/response_entity.dart';
 import 'package:albanote_project/domain/repository/common_repository.dart';
 import 'package:albanote_project/domain/repository/local/local_shared_preferences.dart';
 import 'package:dio/dio.dart';
@@ -13,7 +13,7 @@ class CommonRepositoryImpl extends CommonRepository {
 
   @override
   Future<ResponseEntity<bool>> postCheckAccessTokenValid() async {
-    const uri = 'checkValidAccessToken';
+    const uri = '/checkValidAccessToken';
     try {
       var accessToken = await localSP.findMemberAccessToken();
       var response = await dio.post(
@@ -24,10 +24,10 @@ class CommonRepositoryImpl extends CommonRepository {
         var result = response.data as bool;
         return ResponseEntity.success(result);
       } else {
-        return ResponseEntity.error(response.data.toString());
+        return onErrorHandler(response);
       }
     } on DioError catch (e) {
-      return ResponseEntity.error(e.message);
+      return onDioErrorHandler(e);
     }
   }
 }

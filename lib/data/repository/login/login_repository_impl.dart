@@ -7,7 +7,7 @@ import 'package:albanote_project/domain/repository/login/login_repository.dart';
 import 'package:dio/dio.dart';
 
 import '../../../di/model/member/social_login_type.dart';
-import '../../entity/response_entity.dart';
+import '../../entity/common/response_entity.dart';
 
 class LoginRepositoryImpl extends LoginRepository {
   LoginRepositoryImpl(this.dio);
@@ -30,10 +30,10 @@ class LoginRepositoryImpl extends LoginRepository {
         var dto = MemberLoginResponseDTO.fromJson(jsonDecode(response.data));
         return ResponseEntity.success(dto);
       } else {
-        return ResponseEntity.error(response.data.toString());
+        return onErrorHandler(response);
       }
     } on DioError catch (e) {
-      return ResponseEntity.error(e.message);
+      return onDioErrorHandler(e);
     }
   }
 }

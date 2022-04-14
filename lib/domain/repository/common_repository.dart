@@ -1,6 +1,8 @@
-import 'package:albanote_project/data/entity/response_entity.dart';
+import 'package:albanote_project/data/entity/common/response_entity.dart';
 
-abstract class CommonRepository {
+import '../../data/repository/base_repository.dart';
+
+abstract class CommonRepository extends BaseRepository {
   /// accessToken 유효한지 확인
-  Future<ResponseEntity<bool>> postCheckAccessTokenValid();
+  Future<ResponseEntity> postCheckAccessTokenValid();
 }

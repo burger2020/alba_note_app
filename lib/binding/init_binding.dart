@@ -20,7 +20,7 @@ class InitBinding extends Bindings {
     var localSharedPreferences = LocalSharedPreferences();
 
     var commonRepository = CommonRepositoryImpl(dio, localSharedPreferences);
-    var loginRepository = LoginRepositoryImpl(dio);
+    var loginRepository = LoginRepositoryImpl(dio, localSharedPreferences);
     var memberRepository = MemberRepositoryImpl(dio, localSharedPreferences);
 
     Get.put(RootController(localSharedPreferences, commonRepository, memberRepository));

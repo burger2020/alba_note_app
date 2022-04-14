@@ -4,16 +4,15 @@ import 'dart:io';
 import 'package:albanote_project/data/entity/login/member_login_response_dto.dart';
 import 'package:albanote_project/data/repository/config/repository_config.dart';
 import 'package:albanote_project/di/model/member/os_type.dart';
+import 'package:albanote_project/domain/repository/local/local_shared_preferences.dart';
 import 'package:albanote_project/domain/repository/remote/login_repository.dart';
 import 'package:dio/dio.dart';
 
 import '../../di/model/member/social_login_type.dart';
-import '../entity/response_entity.dart';
+import 'package:albanote_project/data/entity/common/response_entity.dart';
 
 class LoginRepositoryImpl extends LoginRepository {
-  LoginRepositoryImpl(this.dio);
-
-  final Dio dio;
+  LoginRepositoryImpl(Dio dio, LocalSharedPreferences localSP) : super(dio, localSP);
 
   /// 로그인 및 회원가입
   @override
@@ -35,10 +34,10 @@ class LoginRepositoryImpl extends LoginRepository {
         var dto = MemberLoginResponseDTO.fromJson(jsonDecode(response.data));
         return ResponseEntity.success(dto);
       } else {
-        return ResponseEntity.error(response.data.toString());
+        return onErrorHandler(response);
       }
     } on DioError catch (e) {
-      return ResponseEntity.error(e.message);
+      return onDioErrorHandler(e);
     }
   }
 }

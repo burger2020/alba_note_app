@@ -1,7 +1,7 @@
 import 'dart:convert';
 
+import 'package:albanote_project/data/entity/common/response_entity.dart';
 import 'package:albanote_project/data/entity/login/member_token_info_dto.dart';
-import 'package:albanote_project/data/entity/response_entity.dart';
 import 'package:albanote_project/domain/repository/remote/common_repository.dart';
 import 'package:albanote_project/domain/repository/local/local_shared_preferences.dart';
 import 'package:dio/dio.dart';
@@ -9,10 +9,7 @@ import 'package:dio/dio.dart';
 import 'config/repository_config.dart';
 
 class CommonRepositoryImpl extends CommonRepository {
-  CommonRepositoryImpl(this.dio, this.localSP);
-
-  final Dio dio;
-  final LocalSharedPreferences localSP;
+  CommonRepositoryImpl(Dio dio, LocalSharedPreferences localSP) : super(dio, localSP);
 
   @override
   Future<ResponseEntity<bool>> postCheckAccessTokenValid() async {
@@ -27,14 +24,14 @@ class CommonRepositoryImpl extends CommonRepository {
         var result = response.data as bool;
         return ResponseEntity.success(result);
       } else {
-        return ResponseEntity.error(response.data.toString());
+        return onErrorHandler(response);
       }
     } on DioError catch (e) {
-      return ResponseEntity.error(e.message);
+      return onDioErrorHandler(e);
     }
   }
 
-  /// todo baesRepository에서 accessToken 가져오는 함수 만들기 - 없으면 초기화 하고 있으면 바로 가져오는
+  /// todo baesRepository 에서 accessToken 가져오는 함수 만들기 - 없으면 초기화 하고 있으면 바로 가져오는
   @override
   Future<ResponseEntity<MemberTokenInfoDTO>> postRefreshToken() async {
     const uri = '/refreshToken';
@@ -51,10 +48,10 @@ class CommonRepositoryImpl extends CommonRepository {
         var result = MemberTokenInfoDTO.fromJson(jsonDecode(response.data));
         return ResponseEntity.success(result);
       } else {
-        return ResponseEntity.error(response.data.toString());
+        return onErrorHandler(response);
       }
     } on DioError catch (e) {
-      return ResponseEntity.error(e.message);
+      return onDioErrorHandler(e);
     }
   }
 }

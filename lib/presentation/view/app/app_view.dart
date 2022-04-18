@@ -1,4 +1,7 @@
+import 'package:albanote_project/di/model/member/member_type.dart';
 import 'package:albanote_project/etc/custom_class/base_view.dart';
+import 'package:albanote_project/presentation/view/app/workplace/boss_workplace.dart';
+import 'package:albanote_project/presentation/view/app/workplace/employee_workplace.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,6 +22,7 @@ class AppView extends BaseView<AppViewModel> {
     FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
   }
 
+  // fcm 메세지 핸들링
   void _handleMessage(RemoteMessage message) {
     print('${message.notification!.title}');
     if (message.data['type'] == 'chat') {
@@ -29,12 +33,43 @@ class AppView extends BaseView<AppViewModel> {
   @override
   Widget build(BuildContext context) {
     return progressWidget(
-      child: Scaffold(
-        appBar: AppBar(title: const Text("AppView")),
-        body: Row(
-          children: [
-            ElevatedButton(onPressed: () => controller.logout(), child: const Text("logout")),
-          ],
+      child: Obx(
+        () => Scaffold(
+          bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            showSelectedLabels: false,
+            showUnselectedLabels: false,
+            currentIndex: controller.pageIndex.value,
+            elevation: 0,
+            onTap: controller.changeBottomNave,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.work),
+                label: 'home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.chat),
+                label: 'home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.notifications),
+                label: 'home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.more_horiz),
+                label: 'home',
+              ),
+            ],
+          ),
+          body: IndexedStack(
+            index: controller.pageIndex.value,
+            children: [
+              if (controller.getMemberType() == MemberType.BOSS) const BossWorkplace() else const EmployeeWorkplace(),
+              const Center(),
+              const Center(),
+              const Center()
+            ],
+          ),
         ),
       ),
     );

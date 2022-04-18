@@ -13,18 +13,18 @@ class LocalSharedPreferences {
 
   Future<int?> get memberId => findMemberId();
 
-  /// 멤버 정보 저장
-  void updateMemberInfo(MemberLoginResponseDTO memberInfo) async {
-    var pref = await _pref;
-    pref.setString(_memberInfoKey, jsonEncode(memberInfo));
-  }
-
   /// 멤버 정보 조회
   Future<MemberLoginResponseDTO?> findMemberInfo() async {
     var pref = await _pref;
     var json = pref.getString(_memberInfoKey);
     if (json == null) return null;
     return MemberLoginResponseDTO.fromJson(jsonDecode(json));
+  }
+
+  /// 멤버 정보 저장
+  void updateMemberInfo(MemberLoginResponseDTO memberInfo) async {
+    var pref = await _pref;
+    pref.setString(_memberInfoKey, jsonEncode(memberInfo));
   }
 
   /// 멤버 accessToken 조회
@@ -45,6 +45,16 @@ class LocalSharedPreferences {
     } else {
       return -1;
     }
+  }
+
+  Future<MemberType?> findMemberType() async {
+    var memberInfo = await findMemberInfo();
+    if (memberInfo?.memberType == MemberType.BOSS.name) {
+      return MemberType.BOSS;
+    } else if (memberInfo?.memberType == MemberType.EMPLOYEE.name) {
+      return MemberType.EMPLOYEE;
+    }
+    return null;
   }
 
   /// 멤버 타입 저장

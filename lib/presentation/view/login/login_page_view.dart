@@ -2,6 +2,7 @@ import 'package:albanote_project/controller/root_controller.dart';
 import 'package:albanote_project/di/model/member/social_login_type.dart';
 import 'package:albanote_project/etc/custom_class/base_view.dart';
 import 'package:albanote_project/presentation/view_model/login/login_page_view_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -16,29 +17,49 @@ class LoginPageView extends BaseView<LoginPageViewModel> {
     controller.checkSelectMemberType();
 
     return progressWidget(
-      child: Scaffold(
-        appBar: AppBar(),
-        body: GetBuilder<RootController>(
-          builder: (rootController) {
-            return Column(
-              children: [
-                // ElevatedButton(onPressed: _loginNaver, child: const Text("naver login")),
-                // ElevatedButton(onPressed: _logoutNaver, child: const Text("naver logout")),
-                ElevatedButton(
-                    onPressed: () {
-                      _loginKakao(rootController);
-                    },
-                    child: const Text("kakao login")),
-                // ElevatedButton(onPressed: _logoutKakao(rootController), child: const Text("kakao logout")),
-                ElevatedButton(
-                    onPressed: () {
-                      _loginGoogle(rootController);
-                    },
-                    child: const Text("google login")),
-                // ElevatedButton(onPressed: _logoutGoogle(rootController), child: const Text("google logout"))
-              ],
-            );
-          },
+      child: SafeArea(
+        child: Scaffold(
+          body: GetBuilder<RootController>(
+            builder: (rootController) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  // ElevatedButton(onPressed: _loginNaver, child: const Text("naver login")),
+                  // ElevatedButton(onPressed: _logoutNaver, child: const Text("naver logout")),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(primary: const Color(0xfffee500), elevation: 0),
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 15),
+                          child: Text("kakao login", style: TextStyle(fontSize: 18, color: Colors.black)),
+                        ),
+                        onPressed: () {
+                          _loginKakao(rootController);
+                        }),
+                  ),
+                  // ElevatedButton(onPressed: _logoutKakao(rootController), child: const Text("kakao logout")),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20, bottom: 50),
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            side: const BorderSide(width: 0.5, color: Color(0x33000000)),
+                            primary: Colors.white,
+                            elevation: 0),
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 15),
+                          child: Text("google login", style: TextStyle(fontSize: 18, color: Color(0x80000000))),
+                        ),
+                        onPressed: () {
+                          _loginGoogle(rootController);
+                        }),
+                  ),
+                  // ElevatedButton(onPressed: _logoutGoogle(rootController), child: const Text("google logout"))
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

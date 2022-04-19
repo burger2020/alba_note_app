@@ -14,12 +14,19 @@ class AppViewModel extends BaseViewModel {
 
   LocalSharedPreferences localSharedPreferences;
 
+  Rx<MemberType> memberType = MemberType.EMPLOYEE.obs;
   var pageIndex = 0.obs;
   List<int> bottomHistory = [0];
 
-  Future<MemberType?> getMemberType() async {
+  Future setMemberType() async {
     var memberType = await localSharedPreferences.findMemberType();
-    return memberType;
+    this.memberType.value = memberType!;
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    setMemberType();
   }
 
   void changeBottomNave(int value, {bool hasGesture = true}) {

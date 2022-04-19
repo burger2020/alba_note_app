@@ -1,6 +1,6 @@
 import 'package:albanote_project/di/model/member/member_type.dart';
 import 'package:albanote_project/etc/custom_class/base_view.dart';
-import 'package:albanote_project/presentation/view/app/workplace/boss_workplace.dart';
+import 'package:albanote_project/presentation/view/app/workplace/boss/boss_workplace_container_view.dart';
 import 'package:albanote_project/presentation/view/app/workplace/employee_workplace.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +40,8 @@ class AppView extends BaseView<AppViewModel> {
             showSelectedLabels: false,
             showUnselectedLabels: false,
             currentIndex: controller.pageIndex.value,
+            selectedIconTheme: const IconThemeData(color: Colors.black),
+            unselectedIconTheme: const IconThemeData(color: Colors.black12) ,
             elevation: 0,
             onTap: controller.changeBottomNave,
             items: const [
@@ -64,7 +66,13 @@ class AppView extends BaseView<AppViewModel> {
           body: IndexedStack(
             index: controller.pageIndex.value,
             children: [
-              if (controller.getMemberType() == MemberType.BOSS) const BossWorkplace() else const EmployeeWorkplace(),
+              Obx(() {
+                if (controller.memberType.value == MemberType.BOSS) {
+                  return const BossWorkplaceContainerView();
+                } else {
+                  return const EmployeeWorkplace();
+                }
+              }),
               const Center(),
               const Center(),
               const Center()

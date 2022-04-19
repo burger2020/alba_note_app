@@ -5,6 +5,7 @@ class DioInterceptors extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     debugPrint('📲📲 DIO-REQUEST[method: ${options.method}] => PATH: ${options.path}');
+    debugPrint('📲📲 DIO-REQUEST[queryParameters: ${options.queryParameters}]');
     debugPrint('📲📲 DIO-REQUEST[data: ${options.data}]');
     debugPrint('📲📲 DIO-REQUEST[headers: ${options.headers}]');
     return super.onRequest(options, handler);
@@ -14,7 +15,6 @@ class DioInterceptors extends Interceptor {
   Future onResponse(Response response, ResponseInterceptorHandler handler) async {
     debugPrint('🐝🐝 DIO-RESPONSE[statusCode: ${response.statusCode}] => PATH: ${response.requestOptions.path}');
     debugPrint('🐝🐝 DIO-RESPONSE[data: ${response.data}]');
-    debugPrint('🐝🐝 DIO-RESPONSE[extra: ${response.extra}]');
     return super.onResponse(response, handler);
   }
 

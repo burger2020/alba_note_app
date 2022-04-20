@@ -13,7 +13,7 @@ class CommonRepositoryImpl extends CommonRepository {
 
   @override
   Future<ResponseEntity<bool>> postCheckAccessTokenValid() async {
-    const uri = '/checkValidAccessToken';
+    const uri = '/common/checkValidAccessToken';
     try {
       var accessToken = await localSP.accessToken;
       var response = await dio.post(
@@ -31,10 +31,9 @@ class CommonRepositoryImpl extends CommonRepository {
     }
   }
 
-  /// todo baesRepository 에서 accessToken 가져오는 함수 만들기 - 없으면 초기화 하고 있으면 바로 가져오는
   @override
   Future<ResponseEntity<MemberTokenInfoDTO>> postRefreshToken() async {
-    const uri = '/refreshToken';
+    const uri = '/common/refreshToken';
     try {
       final memberId = await localSP.memberId;
       var response = await dio.post(

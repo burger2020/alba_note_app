@@ -1,6 +1,6 @@
 import 'package:albanote_project/data/entity/workplace_of_boss/workplace_info_of_boss_response_dto.dart';
 import 'package:albanote_project/domain/repository/remote/workplace_repository.dart';
-import 'package:albanote_project/error_handler/error_codes.dart';
+import 'package:albanote_project/etc/error_codes.dart';
 import 'package:albanote_project/etc/custom_class/BaseController.dart';
 import 'package:albanote_project/presentation/view/app/workplace/boss/boss_workplace_request_list_view.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +9,8 @@ import 'package:get/get.dart';
 import 'boss_workplace_request_list_view_model.dart';
 
 /// 사장 일터
-class BossWorkplaceViewModel extends BaseViewModel {
-  BossWorkplaceViewModel(this._workplaceOfBossRepository);
+class BossWorkplaceMainViewModel extends BaseViewModel {
+  BossWorkplaceMainViewModel(this._workplaceOfBossRepository);
 
   final WorkplaceOfBossRepository _workplaceOfBossRepository;
 
@@ -28,7 +28,8 @@ class BossWorkplaceViewModel extends BaseViewModel {
     var result = await _workplaceOfBossRepository.getWorkplaceInfoOfBoss(workplaceId);
     result.when(success: (data) {
       workplace(data);
-      isEmpty(false);
+      // isEmpty(false);
+      isEmpty(true);
     }, error: (e) {
       debugPrint("${e.message} , ${e.code}");
       if (e.code == notExistWorkplaceException) {

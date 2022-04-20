@@ -1,17 +1,45 @@
+import 'package:albanote_project/etc/colors.dart';
 import 'package:albanote_project/etc/custom_class/base_view.dart';
-import 'package:albanote_project/presentation/view/app/workplace/boss/boss_workplace_view.dart';
+import 'package:albanote_project/presentation/view/app/workplace/boss/boss_workplace_main_view.dart';
+import 'package:albanote_project/presentation/view/app/workplace/boss/create_workplace/create_workplace_view.dart';
 import 'package:albanote_project/presentation/view_model/app/workplace/boss/boss_workplace_view_model.dart';
+import 'package:albanote_project/presentation/view_model/app/workplace/boss/create_workplace_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class BossWorkplaceContainerView extends BaseView<BossWorkplaceViewModel> {
+class BossWorkplaceContainerView extends BaseView<BossWorkplaceMainViewModel> {
   const BossWorkplaceContainerView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Obx(
       () => controller.isEmpty.value
-          ? const Center(child: Text("일터 없음")) // todo 일터 없는 화면...
+          ? Scaffold(
+              backgroundColor: Colors.white,
+              appBar: buildBaseAppBar(
+                title: "알바노트",
+                textStyle: const TextStyle(fontWeight: FontWeight.bold, color: MyColors.primary),
+              ),
+              body: Container(
+                decoration: const BoxDecoration(border: Border(top: BorderSide(color: Colors.black12))),
+                child: Center(
+                    child: GestureDetector(
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.white,
+                        border: Border.all(color: MyColors.primary)),
+                    child: const Text("등록된 일터가 없습니다.\n일터를 추가해보세요.",
+                        style: TextStyle(fontSize: 15, color: MyColors.primary)),
+                  ),
+                  onTap: () =>
+                      Get.to(const CreateWorkplaceView(), binding: BindingsBuilder(() {
+                        Get.put(CreateWorkplaceViewModel());
+                      })),
+                )),
+              ),
+            ) // todo 일터 없는 화면...
           : DefaultTabController(
               length: 3,
               child: Scaffold(
@@ -49,8 +77,8 @@ class BossWorkplaceContainerView extends BaseView<BossWorkplaceViewModel> {
                                     padding: EdgeInsets.symmetric(horizontal: 10),
                                     child: Text("자유게시판", style: TextStyle(fontSize: 14))))
                           ],
-                          indicatorColor: Color(0xfffdae06),
-                          labelColor: Color(0xfffdae06),
+                          indicatorColor: MyColors.primary,
+                          labelColor: MyColors.primary,
                           unselectedLabelColor: Colors.black26,
                           indicatorSize: TabBarIndicatorSize.label,
                         ),
@@ -59,7 +87,7 @@ class BossWorkplaceContainerView extends BaseView<BossWorkplaceViewModel> {
                 body: Container(
                   color: Colors.white,
                   child: disallowIndicatorWidget(
-                      child: const TabBarView(children: [BossWorkplaceView(), Text("공지"), Text("자유게시판")])),
+                      child: const TabBarView(children: [BossWorkplaceMainView(), Text("공지"), Text("자유게시판")])),
                 ),
               ),
             ),

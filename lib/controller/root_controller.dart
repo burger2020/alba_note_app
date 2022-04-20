@@ -21,18 +21,19 @@ class RootController extends GetxController {
   void onInit() async {
     super.onInit();
     var memberInfo = await _localSP.findMemberInfo();
-    if (memberInfo != null && memberInfo.memberType != null) {
-      _isAuth.value = RootState.APP;
+    if (memberInfo == null || memberInfo.memberType == null) {
+      /// 로컬에 유저 기본 정보 없으면 로그인 화면으로
+      _isAuth.value = RootState.LOGIN;
     } else {
-      /// access token 유효한지 확인
+      /// 로컬에 정보 있으면 서버로 access token 유효한지 확인
       var response = await _commonRepository.postCheckAccessTokenValid();
       response.when(success: (isValid) {
         _isAuth(isValid ? RootState.APP : RootState.LOGIN);
+        listenOnTokenRefresh();
       }, error: (e) {
         _isAuth(RootState.LOGIN);
       });
     }
-    listenOnTokenRefresh();
   }
 
   /// fcm 토큰 새로고침 스트림

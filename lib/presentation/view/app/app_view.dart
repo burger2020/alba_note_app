@@ -1,7 +1,7 @@
 import 'package:albanote_project/di/model/member/member_type.dart';
 import 'package:albanote_project/etc/custom_class/base_view.dart';
 import 'package:albanote_project/presentation/view/app/workplace/boss/boss_workplace_container_view.dart';
-import 'package:albanote_project/presentation/view/app/workplace/employee_workplace.dart';
+import 'package:albanote_project/presentation/view/app/workplace/employee/employee_workplace_main_view.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -70,7 +70,7 @@ class AppView extends BaseView<AppViewModel> {
                 if (controller.memberType.value == MemberType.BOSS) {
                   return const BossWorkplaceContainerView();
                 } else {
-                  return const EmployeeWorkplace();
+                  return const EmployeeWorkplaceMainView();
                 }
               }),
               const Center(),

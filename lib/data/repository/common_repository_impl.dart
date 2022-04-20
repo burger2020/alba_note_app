@@ -1,12 +1,11 @@
 import 'dart:convert';
 
+import 'package:albanote_project/config/repository_config.dart';
 import 'package:albanote_project/data/entity/common/response_entity.dart';
 import 'package:albanote_project/data/entity/login/member_token_info_dto.dart';
 import 'package:albanote_project/domain/repository/remote/common_repository.dart';
 import 'package:albanote_project/domain/repository/local/local_shared_preferences.dart';
 import 'package:dio/dio.dart';
-
-import 'config/repository_config.dart';
 
 class CommonRepositoryImpl extends CommonRepository {
   CommonRepositoryImpl(Dio dio, LocalSharedPreferences localSP) : super(dio, localSP);

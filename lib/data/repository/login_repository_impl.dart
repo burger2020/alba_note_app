@@ -1,15 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:albanote_project/config/repository_config.dart';
+import 'package:albanote_project/data/entity/common/response_entity.dart';
 import 'package:albanote_project/data/entity/login/member_login_response_dto.dart';
-import 'package:albanote_project/data/repository/config/repository_config.dart';
 import 'package:albanote_project/di/model/member/os_type.dart';
 import 'package:albanote_project/domain/repository/local/local_shared_preferences.dart';
 import 'package:albanote_project/domain/repository/remote/login_repository.dart';
 import 'package:dio/dio.dart';
 
 import '../../di/model/member/social_login_type.dart';
-import 'package:albanote_project/data/entity/common/response_entity.dart';
 
 class LoginRepositoryImpl extends LoginRepository {
   LoginRepositoryImpl(Dio dio, LocalSharedPreferences localSP) : super(dio, localSP);

@@ -10,4 +10,6 @@ class CreateWorkplaceViewModel extends BaseViewModel {
   var bossName = ''.obs;
   var bossRankName = ''.obs;
   var bossPhoneNumber = ''.obs;
+
+  RxInt selectRadius = 10.obs;
 }

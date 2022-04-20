@@ -13,39 +13,41 @@ class BossWorkplaceView extends BaseView<BossWorkplaceViewModel> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          const SizedBox(height: 30),
-          _tabView(),
-          const SizedBox(height: 30),
-          // 새로운 요청
-          Obx(() => _buildSectionCommonWidget(
-              title: "새로운 요청 ${controller.workplace.value.workplaceRequest?.length ?? 0}개",
-              list: List.generate(controller.workplace.value.workplaceRequest?.length ?? 0,
-                  (index) => _buildRequestView(controller.workplace.value.workplaceRequest![index])),
-              allView: () => controller.startRequestView())),
-          const SizedBox(height: 40),
-          // 현재 근무자
-          Obx(() => _buildSectionCommonWidget(
-              title:
-                  "현재 근무자 ${controller.workplace.value.currentEmployees?.length ?? 0}/${controller.workplace.value.totalEmployeeCount}명",
-              list: List.generate(controller.workplace.value.currentEmployees?.length ?? 0,
-                  (index) => _buildCurrentWorkingEmployeeView(controller.workplace.value.currentEmployees![index])),
-              allView: () {
-                print("현재 근무자 전체보기");
-              })),
-          const SizedBox(height: 40),
-          Obx(() => _buildSectionCommonWidget(
-              title:
-                  "오늘 완료된 할 일 ${controller.workplace.value.completedTodos?.length ?? 0}/${controller.workplace.value.totalTodoCount}",
-              list: List.generate(controller.workplace.value.completedTodos?.length ?? 0,
-                  (index) => _buildCompletedTodo(controller.workplace.value.completedTodos![index])),
-              allView: () {})),
-          const SizedBox(height: 40),
-        ],
-      ),
-    );
+    return Obx(() =>  SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(height: 30),
+                _tabView(),
+                const SizedBox(height: 30),
+                // 새로운 요청
+                _buildSectionCommonWidget(
+                    title: "새로운 요청 ${controller.workplace.value.workplaceRequest?.length ?? 0}개",
+                    list: List.generate(controller.workplace.value.workplaceRequest?.length ?? 0,
+                        (index) => _buildRequestView(controller.workplace.value.workplaceRequest![index])),
+                    allView: () => controller.startRequestView()),
+                const SizedBox(height: 40),
+                // 현재 근무자
+                _buildSectionCommonWidget(
+                    title:
+                        "현재 근무자 ${controller.workplace.value.currentEmployees?.length ?? 0}/${controller.workplace.value.totalEmployeeCount}명",
+                    list: List.generate(
+                        controller.workplace.value.currentEmployees?.length ?? 0,
+                        (index) =>
+                            _buildCurrentWorkingEmployeeView(controller.workplace.value.currentEmployees![index])),
+                    allView: () {
+                      print("현재 근무자 전체보기");
+                    }),
+                const SizedBox(height: 40),
+                _buildSectionCommonWidget(
+                    title:
+                        "오늘 완료된 할 일 ${controller.workplace.value.completedTodos?.length ?? 0}/${controller.workplace.value.totalTodoCount}",
+                    list: List.generate(controller.workplace.value.completedTodos?.length ?? 0,
+                        (index) => _buildCompletedTodo(controller.workplace.value.completedTodos![index])),
+                    allView: () {}),
+                const SizedBox(height: 40),
+              ],
+            ),
+          ));
   }
 
   /// 메뉴 아이콘 그리드뷰

@@ -15,13 +15,7 @@ class BossWorkplaceRequestListView extends BaseView<BossWorkplaceRequestViewMode
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: GestureDetector(child: const Icon(Icons.close, color: Colors.black), onTap: () => Get.back()),
-        title: const Text("전체 요청", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-        centerTitle: true,
-      ),
+      appBar: buildBaseAppBar(title: "전체 요청"),
       body: Container(
         decoration: const BoxDecoration(border: Border(top: BorderSide(color: Colors.black12))),
         child: disallowIndicatorWidget(

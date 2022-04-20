@@ -1,9 +1,10 @@
 import 'package:albanote_project/di/model/member/member_type.dart';
+import 'package:albanote_project/etc/custom_class/base_view.dart';
 import 'package:albanote_project/presentation/view_model/login/login_page_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SelectMemberTypeView extends GetView<LoginPageViewModel> {
+class SelectMemberTypeView extends BaseView<LoginPageViewModel> {
   const SelectMemberTypeView({Key? key}) : super(key: key);
 
   @override
@@ -38,7 +39,13 @@ class SelectMemberTypeView extends GetView<LoginPageViewModel> {
                       padding: EdgeInsets.symmetric(vertical: 12.0),
                       child: Text("사장님", style: TextStyle(fontSize: 18, color: Colors.white))),
                   onPressed: () {
-                    controller.putSelectMemberType(MemberType.BOSS);
+                    showAlertDialog(
+                      title: "회원 종류 선택",
+                      content: "사장님으로 회원가입을 선택했어요.\n회원 종류는 바꿀 수 없습니다.\n가입하시겠어요?",
+                      setOnPositiveListener: () {
+                        controller.putSelectMemberType(MemberType.BOSS);
+                      },
+                    );
                   }),
             ),
             const Padding(
@@ -51,7 +58,13 @@ class SelectMemberTypeView extends GetView<LoginPageViewModel> {
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(primary: const Color(0xfffdae06), elevation: 0),
                   onPressed: () {
-                    controller.putSelectMemberType(MemberType.EMPLOYEE);
+                    showAlertDialog(
+                      title: "회원 종류 선택",
+                      content: "직원/알바생으로 회원가입을 선택했어요.\n회원 종류는 바꿀 수 없습니다.\n가입하시겠어요?",
+                      setOnPositiveListener: () {
+                        controller.putSelectMemberType(MemberType.EMPLOYEE);
+                      },
+                    );
                   },
                   child: const Padding(
                     padding: EdgeInsets.symmetric(vertical: 12.0),

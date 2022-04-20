@@ -31,9 +31,9 @@ class InitBinding extends Bindings {
 
     Get.put(RootController(localSharedPreferences, commonRepository, memberRepository));
     Get.put(BottomNavController(), permanent: true);
-    Get.put(AppViewModel(localSharedPreferences));
-    Get.put(LoginPageViewModel(loginRepository, localSharedPreferences, memberRepository), permanent: true);
+    Get.lazyPut(() => AppViewModel(localSharedPreferences));
+    Get.lazyPut(() => LoginPageViewModel(loginRepository, localSharedPreferences, memberRepository));
 
-    Get.put(BossWorkplaceViewModel(workplaceOfBossRepository));
+    Get.lazyPut(() =>BossWorkplaceMainViewModel(workplaceOfBossRepository));
   }
 }

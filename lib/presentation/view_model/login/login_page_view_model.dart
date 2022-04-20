@@ -38,6 +38,7 @@ class LoginPageViewModel extends BaseViewModel {
 
   /// 멤버 종류 선택
   Future putSelectMemberType(MemberType memberType) async {
+
     showProgress(true);
     Future.delayed(const Duration(milliseconds: 500));
     var response = await _memberRepository.putSelectMemberType(memberType);

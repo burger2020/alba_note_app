@@ -1,9 +1,9 @@
 import 'dart:convert';
 
+import 'package:albanote_project/config/repository_config.dart';
 import 'package:albanote_project/data/entity/common/response_entity.dart';
 import 'package:albanote_project/data/entity/workplace_of_boss/workplace_info_of_boss_response_dto.dart';
 import 'package:albanote_project/data/entity/workplace_of_boss/workplace_request_simple_response_dto.dart';
-import 'package:albanote_project/data/repository/config/repository_config.dart';
 import 'package:albanote_project/domain/model/page_request_model.dart';
 import 'package:albanote_project/domain/repository/local/local_shared_preferences.dart';
 import 'package:dio/dio.dart';

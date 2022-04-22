@@ -44,6 +44,12 @@ abstract class BaseView<T extends BaseViewModel> extends GetView<T> {
     ]);
   }
 
+  /// 스낵바 출력
+  showSnackBar(String content) {
+    var snackBar = SnackBar(content: Text(content));
+    ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
+  }
+
   buildShowDialog(BuildContext context) {
     return showDialog(
         context: context,

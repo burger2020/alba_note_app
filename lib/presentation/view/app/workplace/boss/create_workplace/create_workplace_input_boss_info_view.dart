@@ -54,11 +54,11 @@ class CreateWorkplaceInputBossInfoView extends BaseView<CreateWorkplaceViewModel
                   style: TextStyle(fontSize: 15),
                 ),
                 const SizedBox(height: 30),
-                HintInputBox(title: '이름', hintText: '홍길동', onChange: (text) => controller.bossName(text)),
+                TitleTextField(title: '이름', hintText: '홍길동', onChange: (text) => controller.bossName(text)),
                 const SizedBox(height: 20),
-                HintInputBox(title: '직책 이름', hintText: '사장님', onChange: (text) => controller.bossRankName(text)),
+                TitleTextField(title: '직책 이름', hintText: '사장님', onChange: (text) => controller.bossRankName(text)),
                 const SizedBox(height: 20),
-                HintInputBox(
+                TitleTextField(
                   title: '전화번호',
                   hintText: '010-0000-0000',
                   keyboardType: TextInputType.phone,

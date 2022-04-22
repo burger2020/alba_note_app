@@ -1,5 +1,5 @@
+import 'package:albanote_project/config/repository_config.dart';
 import 'package:albanote_project/data/entity/common/response_entity.dart';
-import 'package:albanote_project/data/repository/config/repository_config.dart';
 import 'package:albanote_project/di/model/member/member_type.dart';
 import 'package:albanote_project/domain/repository/local/local_shared_preferences.dart';
 import 'package:albanote_project/domain/repository/remote/member_repository.dart';

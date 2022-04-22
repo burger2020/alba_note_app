@@ -6,8 +6,9 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
-class HintInputBox extends StatelessWidget {
-  HintInputBox(
+///
+class TitleTextField extends StatelessWidget {
+  const TitleTextField(
       {Key? key, this.controller,
       required this.title,
       this.subtitle,
@@ -17,20 +18,20 @@ class HintInputBox extends StatelessWidget {
       this.onChange})
       : super(key: key);
 
-  String title;
-  String? subtitle;
-  String hintText;
-  TextEditingController? controller;
-  TextInputType keyboardType;
-  TextInputAction textInputAction;
-  Function? onChange;
+  final String title;
+  final String? subtitle;
+  final String hintText;
+  final TextEditingController? controller;
+  final TextInputType keyboardType;
+  final TextInputAction textInputAction;
+  final Function? onChange;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title),
+        Text(title, style: const TextStyle(fontSize: 14)),
         const SizedBox(height: 10),
         subtitle != null
             ? Column(children: [
@@ -51,6 +52,7 @@ class HintInputBox extends StatelessWidget {
           onChanged: (text) {
             if(onChange != null) onChange!(text);
           },
+          style: const TextStyle(fontSize: 14),
           decoration: InputDecoration(
               isDense: true,
               contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),

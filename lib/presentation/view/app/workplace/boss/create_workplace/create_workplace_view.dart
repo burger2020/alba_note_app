@@ -1,8 +1,10 @@
+import 'package:albanote_project/config/repository_config.dart';
 import 'package:albanote_project/etc/colors.dart';
 import 'package:albanote_project/etc/custom_class/base_view.dart';
 import 'package:albanote_project/presentation/component/hint_input_box.dart';
 import 'package:albanote_project/presentation/view/app/workplace/boss/create_workplace/commute_range_set_view.dart';
 import 'package:albanote_project/presentation/view/app/workplace/boss/create_workplace/create_workplace_input_boss_info_view.dart';
+import 'package:albanote_project/presentation/view/common/web_view.dart';
 import 'package:albanote_project/presentation/view_model/app/workplace/boss/create_workplace_view_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -83,7 +85,10 @@ class CreateWorkplaceView extends BaseView<CreateWorkplaceViewModel> {
                     onChanged: (text) => controller.workplaceAddress(text),
                   ),
                   onTap: () {
-                    print("주소 선택 화면");
+                    Get.to(CustomWebView(
+                      url: RepositoryConfig.serverUrl + '/kakaoAddressWeb',
+                      appBarTitle: '주소 검색',
+                    ));
                   },
                 ),
                 const SizedBox(height: 10),
@@ -166,8 +171,8 @@ class CreateWorkplaceView extends BaseView<CreateWorkplaceViewModel> {
                                       },
                                       imageUrl:
                                           'https://naveropenapi.apigw.ntruss.com/map-static/v2/raster?w=200&h=200&'
-                                          'center=${controller.selectCoordinate.value.longitude},${controller.selectCoordinate.value.latitude}&'
-                                          'level=16&scale=1&markers=type:a|size:mid|color:orange|pos:${controller.selectCoordinate.value.longitude}%20${controller.selectCoordinate.value.latitude}'),
+                                          'center=${controller.selectCoord.value.longitude},${controller.selectCoord.value.latitude}&'
+                                          'level=16&scale=1&markers=type:a|size:mid|color:orange|pos:${controller.selectCoord.value.longitude}%20${controller.selectCoord.value.latitude}'),
                                   const SizedBox(width: 10),
                                   Text(
                                     "출퇴근 가능 범위 - ${controller.selectRadius}m",

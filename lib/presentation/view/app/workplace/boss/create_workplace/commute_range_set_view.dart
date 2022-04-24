@@ -29,8 +29,10 @@ class CommuteRangeSetView extends BaseView<CreateWorkplaceViewModel> {
                 width: Get.width,
                 height: Get.height / 2,
                 child: NaverMap(
-                  initialCameraPosition: const CameraPosition(
-                    target: LatLng(37.566570, 126.978442),
+                  initialCameraPosition: CameraPosition(
+                    target: controller.selectCoord.value.latitude == null
+                        ? const LatLng(37.566570, 126.978442)
+                        : LatLng(controller.selectCoord.value.latitude!, controller.selectCoord.value.longitude!),
                     zoom: 17,
                   ),
                   locationButtonEnable: true,
@@ -76,6 +78,26 @@ class CommuteRangeSetView extends BaseView<CreateWorkplaceViewModel> {
                         overlayId: '1212',
                       );
                       controller.selectLocationOverlay([circleOverlay]);
+                      var zoom = 17.0;
+                      switch (controller.selectRadius.value) {
+                        case 25:
+                          zoom = 17;
+                          break;
+                        case 50:
+                          zoom = 16.5;
+                          break;
+                        case 75:
+                          zoom = 16;
+                          break;
+                        case 100:
+                          zoom = 15.5;
+                          break;
+                        case 150:
+                          zoom = 15;
+                          break;
+                      }
+                      var cameraUpdate = CameraUpdate.zoomTo(zoom);
+                      naverMapController?.moveCamera(cameraUpdate, animationDuration: 300);
                     },
                   ),
                 ),
@@ -89,7 +111,7 @@ class CommuteRangeSetView extends BaseView<CreateWorkplaceViewModel> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('출퇴근 가능 범위', style: TextStyle(fontSize: 14)),
+                    const Text('출퇴근 가능 범위(반지름)', style: TextStyle(fontSize: 14)),
                     Container(
                       decoration: BoxDecoration(
                           border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(4)),
@@ -124,34 +146,42 @@ class CommuteRangeSetView extends BaseView<CreateWorkplaceViewModel> {
               /// 지정 취소 버튼
               child: const Text('지정 취소', style: TextStyle(fontSize: 13, color: Colors.red)),
               onTap: () {
-                controller.selectCoordinate.value = CoordinateModel(null, null);
+                controller.selectCoord.value = CoordinateModel(null, null);
                 controller.isCommuteRangeSet(false);
+                controller.selectLocationOverlay([]);
                 Get.back();
               },
             ),
           ),
           // todo 위치 선택 안 했을때 스낵바 띄우기 ㄲ
-          GestureDetector(
-            /// 지정 완료 버튼
-            child: Container(
-              margin: const EdgeInsets.all(20),
-              padding: const EdgeInsets.all(15),
-              width: Get.width,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(4)),
-                color: MyColors.primary,
+          Obx(() {
+            var buttonColor = controller.selectLocationOverlay.isNotEmpty ? MyColors.primary : Colors.black26;
+
+            return GestureDetector(
+              /// 지정 완료 버튼
+              child: Container(
+                margin: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(15),
+                width: Get.width,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(4)),
+                  color: buttonColor,
+                ),
+                child: const Center(
+                  child:
+                      Text("지정 완료", style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold)),
+                ),
               ),
-              child: const Center(
-                child: Text("지정 완료", style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold)),
-              ),
-            ),
-            onTap: () async {
-              var position = await naverMapController!.getCameraPosition();
-              controller.selectCoordinate.value = CoordinateModel(position.target.latitude, position.target.longitude);
-              controller.isCommuteRangeSet(true);
-              Get.back();
-            },
-          )
+              onTap: () async {
+                if (controller.selectLocationOverlay.isNotEmpty) {
+                  var position = await naverMapController!.getCameraPosition();
+                  controller.selectCoord.value = CoordinateModel(position.target.latitude, position.target.longitude);
+                  controller.isCommuteRangeSet(true);
+                  Get.back();
+                }
+              },
+            );
+          })
         ],
       ),
     );

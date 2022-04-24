@@ -15,6 +15,6 @@ class CreateWorkplaceViewModel extends BaseViewModel {
 
   RxBool isCommuteRangeSet = false.obs;
   RxInt selectRadius = 25.obs;
-  Rx<CoordinateModel> selectCoordinate = CoordinateModel(null, null).obs;
+  Rx<CoordinateModel> selectCoord = CoordinateModel(null, null).obs;
   RxList<CircleOverlay> selectLocationOverlay = RxList<CircleOverlay>();
 }

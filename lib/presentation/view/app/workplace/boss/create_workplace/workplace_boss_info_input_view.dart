@@ -5,8 +5,8 @@ import 'package:albanote_project/presentation/view_model/app/workplace/boss/crea
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class CreateWorkplaceInputBossInfoView extends BaseView<CreateWorkplaceViewModel> {
-  const CreateWorkplaceInputBossInfoView({Key? key}) : super(key: key);
+class WorkplaceBossInfoInputView extends BaseView<CreateWorkplaceViewModel> {
+  const WorkplaceBossInfoInputView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,15 +25,12 @@ class CreateWorkplaceInputBossInfoView extends BaseView<CreateWorkplaceViewModel
             return enable
                 ? GestureDetector(
                     child: const Padding(
-                        padding: EdgeInsets.all(10.0),
+                        padding: EdgeInsets.all(20.0),
                         child: Center(child: Text("다음", style: TextStyle(fontSize: 15, color: MyColors.primary)))),
-                    onTap: () {
-                      Get.to(const CreateWorkplaceInputBossInfoView(),
-                          binding: BindingsBuilder(() => {Get.put(controller)}));
-                    },
+                    onTap: () => controller.startWorkplaceBusinessInputView(),
                   )
                 : const Padding(
-                    padding: EdgeInsets.all(10.0),
+                    padding: EdgeInsets.all(20.0),
                     child: Center(child: Text("다음", style: TextStyle(fontSize: 15, color: Colors.grey))));
           })
         ],
@@ -49,10 +46,7 @@ class CreateWorkplaceInputBossInfoView extends BaseView<CreateWorkplaceViewModel
                 const SizedBox(height: 10),
                 const Text("사장님 정보 입력", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 10),
-                const Text(
-                  "직원들이 볼 수 있는 사장님의 정보를 입력해주세요.",
-                  style: TextStyle(fontSize: 15),
-                ),
+                const Text("직원들이 볼 수 있는 사장님의 정보를 입력해주세요.", style: TextStyle(fontSize: 15)),
                 const SizedBox(height: 30),
                 TitleTextField(title: '이름', hintText: '홍길동', onChange: (text) => controller.bossName(text)),
                 const SizedBox(height: 20),

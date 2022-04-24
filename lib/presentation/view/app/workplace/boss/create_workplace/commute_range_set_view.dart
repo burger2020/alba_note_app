@@ -144,7 +144,7 @@ class CommuteRangeSetView extends BaseView<CreateWorkplaceViewModel> {
           Center(
             child: GestureDetector(
               /// 지정 취소 버튼
-              child: const Text('지정 취소', style: TextStyle(fontSize: 13, color: Colors.red)),
+              child: const Text('지정 취소', style: TextStyle(fontSize: 13, color: Colors.grey)),
               onTap: () {
                 controller.selectCoord.value = CoordinateModel(null, null);
                 controller.isCommuteRangeSet(false);

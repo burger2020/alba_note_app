@@ -2,11 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:get/get.dart';
 
 class CustomWebView extends StatefulWidget {
   CustomWebView({Key? key, required this.url, this.appBarTitle}) : super(key: key);
 
-  String url;
+  URLRequest url;
   String? appBarTitle;
 
   @override
@@ -73,18 +74,21 @@ class _CustomWebViewState extends State<CustomWebView> {
         children: [
           InAppWebView(
               key: webViewKey,
-              initialUrlRequest: URLRequest(url: Uri.parse(widget.url), headers: {
-                'Authorization':
-                    'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMSIsImV4cCI6MTY1MDY4MTg3NywiaXNzIjoiYWxiYV9ub3RlIiwiaWF0IjoxNjUwNTk1NDc3fQ.QVERkcdWTLtive00M3U_qmq4DKFEq2b4ucYh6RfmJlUUGuXP05JnaOfmuP6afDxToj9fbPRHBEBpi_sjq1Y5ag'
-              }),
+              initialUrlRequest: widget.url,
               initialOptions: options,
               pullToRefreshController: pullToRefreshController,
               onWebViewCreated: (controller) {
                 webViewController = controller;
+
+                /// javaScript 주소 검색 결과
                 webViewController!.addJavaScriptHandler(
                     handlerName: 'handlerFoo',
                     callback: (args) {
-                      print('args = ' + args.toString());
+                      debugPrint('args = ' + args.toString());
+                      var address = args[1];
+                      if (args[2] != '') address + ' (${args[2]})';
+                      print('address = ' + address);
+                      Get.back(result: address);
                     });
               },
               androidOnPermissionRequest: (controller, origin, resources) async {
@@ -92,15 +96,15 @@ class _CustomWebViewState extends State<CustomWebView> {
               },
               onLoadStart: (controller, url) {
                 setState(() {
-                  widget.url = url.toString();
-                  urlController.text = widget.url;
+                  widget.url.url = url;
+                  urlController.text = url.toString();
                 });
               },
               onLoadStop: (controller, url) async {
                 pullToRefreshController.endRefreshing();
                 setState(() {
-                  widget.url = url.toString();
-                  urlController.text = widget.url;
+                  widget.url.url = url;
+                  urlController.text = url.toString();
                 });
               },
               onLoadError: (controller, url, code, message) {
@@ -112,7 +116,7 @@ class _CustomWebViewState extends State<CustomWebView> {
                 }
                 setState(() {
                   this.progress = progress / 100;
-                  urlController.text = widget.url;
+                  urlController.text = widget.url.url.toString();
                 });
               }),
           progress < 1.0 ? LinearProgressIndicator(value: progress) : Container(),

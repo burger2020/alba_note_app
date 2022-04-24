@@ -3,6 +3,8 @@ import 'package:albanote_project/domain/repository/remote/workplace_repository.d
 import 'package:albanote_project/etc/error_codes.dart';
 import 'package:albanote_project/etc/custom_class/BaseController.dart';
 import 'package:albanote_project/presentation/view/app/workplace/boss/boss_workplace_request_list_view.dart';
+import 'package:albanote_project/presentation/view/app/workplace/boss/create_workplace/create_workplace_view.dart';
+import 'package:albanote_project/presentation/view_model/app/workplace/boss/create_workplace_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -42,6 +44,12 @@ class BossWorkplaceMainViewModel extends BaseViewModel {
   void startRequestView() {
     Get.to(const BossWorkplaceRequestListView(), binding: BindingsBuilder(() {
       Get.put(BossWorkplaceRequestViewModel(_workplaceOfBossRepository, workplace.value.workplaceId!));
+    }));
+  }
+
+  startCreateWorkplaceView() {
+    Get.to(const CreateWorkplaceView(), binding: BindingsBuilder(() {
+      Get.put(CreateWorkplaceViewModel(_workplaceOfBossRepository));
     }));
   }
 }

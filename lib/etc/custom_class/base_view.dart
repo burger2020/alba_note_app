@@ -73,18 +73,21 @@ abstract class BaseView<T extends BaseViewModel> extends GetView<T> {
                   ),
                 )
               : Container(),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              color: buttonColor,
-            ),
-            margin: const EdgeInsets.only(top: 10, left: 20, right: 20),
-            width: Get.width,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15.0),
-              child: Center(
-                child:
-                    Text(text, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+          GestureDetector(
+            onTap: () => onPositiveTab != null ? onPositiveTab() : {},
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                color: buttonColor,
+              ),
+              margin: const EdgeInsets.only(top: 10, left: 20, right: 20),
+              width: Get.width,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 15.0),
+                child: Center(
+                  child: Text(text,
+                      style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                ),
               ),
             ),
           ),

@@ -81,8 +81,9 @@ class WorkplaceBusinessInputView extends BaseView<CreateWorkplaceViewModel> {
                         );
 
                         selectedDate.then((dateTime) {
-                          controller.openingDateOfBusiness.value = dateTime.toString();
-                          controller.openingDateController.text = DateFormat('yyyy-MM-dd').format(dateTime!);
+                          var date = DateFormat('yyyy-MM-dd').format(dateTime!);
+                          controller.openingDateController.text = date;
+                          controller.openingDateOfBusiness.value = date.replaceAll('-', '');
                         });
                       },
                     ),
@@ -90,9 +91,10 @@ class WorkplaceBusinessInputView extends BaseView<CreateWorkplaceViewModel> {
                     TitleTextField(
                         title: '상호명(법인명)', hintText: '알바노트', onChange: (text) => controller.businessName(text)),
                     Row(children: [
-                      Obx(() => Checkbox(
-                          value: controller.isCorporateBusiness.value,
-                          onChanged: (bool? value) => controller.isCorporateBusiness(value))),
+                      Obx(() =>
+                          Checkbox(
+                              value: controller.isCorporateBusiness.value,
+                              onChanged: (bool? value) => controller.isCorporateBusiness(value))),
                       const Text('법인회사'),
                     ]),
                     const SizedBox(height: 20),
@@ -118,7 +120,9 @@ class WorkplaceBusinessInputView extends BaseView<CreateWorkplaceViewModel> {
                     text: '일터 생성',
                     isEnable: isEnable,
                     negativeButtonText: "건너뛰기",
-                    onPositiveTab: () {},
+                    onPositiveTab: () {
+                      controller.postCheckBusiness();
+                    },
                     onNegativeTab: () {
                       showAlertDialog(
                           title: '사업자 정보 입력 건너뛰기',
@@ -128,7 +132,6 @@ class WorkplaceBusinessInputView extends BaseView<CreateWorkplaceViewModel> {
                           barrierDismissible: true);
                     });
               }),
-              /// todo 사업자 정보 입력 건너뛰기 및 완료 결과 서버 반영  ㄲ
               const SizedBox(height: 20)
             ],
           ),

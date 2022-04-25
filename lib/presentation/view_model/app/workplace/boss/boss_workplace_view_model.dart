@@ -30,7 +30,6 @@ class BossWorkplaceMainViewModel extends BaseViewModel {
     var result = await _workplaceOfBossRepository.getWorkplaceInfoOfBoss(workplaceId);
     result.when(success: (data) {
       workplace(data);
-      // isEmpty(false);
       isEmpty(true);
     }, error: (e) {
       debugPrint("${e.message} , ${e.code}");
@@ -47,9 +46,8 @@ class BossWorkplaceMainViewModel extends BaseViewModel {
     }));
   }
 
+  /// 사장 일터 생성화면 이동
   startCreateWorkplaceView() {
-    Get.to(const CreateWorkplaceView(), binding: BindingsBuilder(() {
-      Get.put(CreateWorkplaceViewModel(_workplaceOfBossRepository));
-    }));
+    Get.to(const CreateWorkplaceView());
   }
 }

@@ -33,10 +33,7 @@ class BossWorkplaceContainerView extends BaseView<BossWorkplaceMainViewModel> {
                     child: const Text("등록된 일터가 없습니다.\n일터를 추가해보세요.",
                         style: TextStyle(fontSize: 15, color: MyColors.primary)),
                   ),
-                  onTap: () =>
-                      Get.to(const CreateWorkplaceView(), binding: BindingsBuilder(() {
-                        Get.put(CreateWorkplaceViewModel());
-                      })),
+                  onTap: () => controller.startCreateWorkplaceView(),
                 )),
               ),
             ) // todo 일터 없는 화면...

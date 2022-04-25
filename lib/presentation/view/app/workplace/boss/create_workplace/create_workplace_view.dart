@@ -3,11 +3,12 @@ import 'package:albanote_project/etc/colors.dart';
 import 'package:albanote_project/etc/custom_class/base_view.dart';
 import 'package:albanote_project/presentation/component/hint_input_box.dart';
 import 'package:albanote_project/presentation/view/app/workplace/boss/create_workplace/commute_range_set_view.dart';
-import 'package:albanote_project/presentation/view/app/workplace/boss/create_workplace/create_workplace_input_boss_info_view.dart';
+import 'package:albanote_project/presentation/view/app/workplace/boss/create_workplace/workplace_boss_info_input_view.dart';
 import 'package:albanote_project/presentation/view/common/web_view.dart';
 import 'package:albanote_project/presentation/view_model/app/workplace/boss/create_workplace_view_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
 
 /// 일터 생성 일터 정보 입력 화면
@@ -16,6 +17,8 @@ class CreateWorkplaceView extends BaseView<CreateWorkplaceViewModel> {
 
   @override
   Widget build(BuildContext context) {
+    /// 다음 화면으로 이동버튼
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: buildBaseAppBar(
@@ -31,15 +34,12 @@ class CreateWorkplaceView extends BaseView<CreateWorkplaceViewModel> {
             return enable
                 ? GestureDetector(
                     child: const Padding(
-                        padding: EdgeInsets.all(10.0),
+                        padding: EdgeInsets.all(20.0),
                         child: Center(child: Text("다음", style: TextStyle(fontSize: 15, color: MyColors.primary)))),
-                    onTap: () {
-                      Get.to(const CreateWorkplaceInputBossInfoView(),
-                          binding: BindingsBuilder(() => {Get.put(controller)}));
-                    },
+                    onTap: () => controller.startCreateWorkplaceInputBossInfoView(),
                   )
                 : const Padding(
-                    padding: EdgeInsets.all(10.0),
+                    padding: EdgeInsets.all(20.0),
                     child: Center(child: Text("다음", style: TextStyle(fontSize: 15, color: Colors.grey))));
           })
         ],
@@ -57,7 +57,7 @@ class CreateWorkplaceView extends BaseView<CreateWorkplaceViewModel> {
                 const SizedBox(height: 10),
                 const Text("직원들이 볼 수 있는 일터 정보를 입력해주세요.", style: TextStyle(fontSize: 14)),
                 const SizedBox(height: 40),
-                TitleTextField(title: '일터 이름', hintText: '홍길동', onChange: (t) => controller.workplaceName(t)),
+                TitleTextField(title: '일터 이름', hintText: '알바노트', onChange: (t) => controller.workplaceName(t)),
 
                 /// 직원 수는 구인구직 업데이트할 때 수집하면 될듯
                 // const SizedBox(height: 30),
@@ -84,11 +84,16 @@ class CreateWorkplaceView extends BaseView<CreateWorkplaceViewModel> {
                     controller: controller.addressController,
                     onChanged: (text) => controller.workplaceAddress(text),
                   ),
-                  onTap: () {
-                    Get.to(CustomWebView(
-                      url: RepositoryConfig.serverUrl + '/kakaoAddressWeb',
+                  onTap: () async {
+                    var accessToken = await controller.getAccessToken();
+                    var address = await Get.to(CustomWebView(
+                      url: URLRequest(
+                          url: Uri.parse(RepositoryConfig.serverUrl + '/kakaoAddressWeb'),
+                          headers: {'Authorization': accessToken!}),
                       appBarTitle: '주소 검색',
                     ));
+                    controller.workplaceAddress(address);
+                    controller.addressController.text = address;
                   },
                 ),
                 const SizedBox(height: 10),
@@ -158,7 +163,7 @@ class CreateWorkplaceView extends BaseView<CreateWorkplaceViewModel> {
                       child: Obx(() {
                         return !controller.isCommuteRangeSet.value
                             ? Container()
-                            : Row(
+                            : Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -173,11 +178,9 @@ class CreateWorkplaceView extends BaseView<CreateWorkplaceViewModel> {
                                           'https://naveropenapi.apigw.ntruss.com/map-static/v2/raster?w=200&h=200&'
                                           'center=${controller.selectCoord.value.longitude},${controller.selectCoord.value.latitude}&'
                                           'level=16&scale=1&markers=type:a|size:mid|color:orange|pos:${controller.selectCoord.value.longitude}%20${controller.selectCoord.value.latitude}'),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    "출퇴근 가능 범위 - ${controller.selectRadius}m",
-                                    style: const TextStyle(color: Colors.black87),
-                                  )
+                                  const SizedBox(height: 10),
+                                  Text("출퇴근 범위 ${controller.selectRadius}m",
+                                      style: const TextStyle(color: Colors.black54, fontSize: 13))
                                 ],
                               );
                       }),

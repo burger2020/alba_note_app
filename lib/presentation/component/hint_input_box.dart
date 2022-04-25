@@ -9,10 +9,12 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 ///
 class TitleTextField extends StatelessWidget {
   const TitleTextField(
-      {Key? key, this.controller,
+      {Key? key,
+      this.controller,
       required this.title,
       this.subtitle,
       required this.hintText,
+      this.inputFormatter,
       this.keyboardType = TextInputType.text,
       this.textInputAction = TextInputAction.next,
       this.onChange})
@@ -25,6 +27,7 @@ class TitleTextField extends StatelessWidget {
   final TextInputType keyboardType;
   final TextInputAction textInputAction;
   final Function? onChange;
+  final MaskTextInputFormatter? inputFormatter;
 
   @override
   Widget build(BuildContext context) {
@@ -40,17 +43,19 @@ class TitleTextField extends StatelessWidget {
               ])
             : Container(),
         TextField(
-          inputFormatters: keyboardType == TextInputType.phone
-              ? [
-                  MaskTextInputFormatter(
-                      mask: '###-####-####', filter: {"#": RegExp(r'[0-9]')}, type: MaskAutoCompletionType.lazy)
-                ]
-              : [],
+          inputFormatters: inputFormatter != null
+              ? [inputFormatter!]
+              : keyboardType == TextInputType.phone
+                  ? [
+                      MaskTextInputFormatter(
+                          mask: '###-####-####', filter: {"#": RegExp(r'[0-9]')}, type: MaskAutoCompletionType.lazy)
+                    ]
+                  : [],
           textInputAction: textInputAction,
           cursorColor: MyColors.primary,
           keyboardType: keyboardType,
           onChanged: (text) {
-            if(onChange != null) onChange!(text);
+            if (onChange != null) onChange!(text);
           },
           style: const TextStyle(fontSize: 14),
           decoration: InputDecoration(

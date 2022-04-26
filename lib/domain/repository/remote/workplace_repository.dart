@@ -1,6 +1,7 @@
 import 'package:albanote_project/data/entity/common/response_entity.dart';
-import 'package:albanote_project/data/entity/workplace_of_boss/workplace_info_of_boss_response_dto.dart';
-import 'package:albanote_project/data/entity/workplace_of_boss/workplace_request_simple_response_dto.dart';
+import 'package:albanote_project/data/entity/request/workplace_of_boss/create_workplace_request_dto.dart';
+import 'package:albanote_project/data/entity/response/workplace_of_boss/workplace_info_of_boss_response_dto.dart';
+import 'package:albanote_project/data/entity/response/workplace_of_boss/workplace_request_simple_response_dto.dart';
 import 'package:albanote_project/data/repository/base_repository.dart';
 import 'package:albanote_project/domain/model/page_request_model.dart';
 import 'package:albanote_project/domain/repository/local/local_shared_preferences.dart';
@@ -19,4 +20,7 @@ abstract class WorkplaceOfBossRepository extends BaseRepository {
   /// 일터 리스트 조회
   Future<ResponseEntity<List<WorkplaceRequestSimpleResponseDTO>>> getWorkplaceRequestList(
       int workplaceId, PageRequestModel pageRequest, bool isIncomplete);
+
+  /// 일터 생성
+  Future<ResponseEntity<int>> postCreateWorkplace(CreateWorkplaceRequestDTO dto);
 }

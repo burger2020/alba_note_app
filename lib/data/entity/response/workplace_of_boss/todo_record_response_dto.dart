@@ -1,6 +1,7 @@
-import 'package:albanote_project/data/entity/workplace_of_boss/employee_member_simple_response_dto.dart';
+import 'package:albanote_project/data/entity/response/workplace_of_boss/employee_member_simple_response_dto.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
 
 part 'todo_record_response_dto.freezed.dart';
 

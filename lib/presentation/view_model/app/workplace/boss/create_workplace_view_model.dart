@@ -1,7 +1,9 @@
+import 'package:albanote_project/data/entity/request/workplace_of_boss/create_workplace_request_dto.dart';
 import 'package:albanote_project/domain/model/coordinate_model.dart';
 import 'package:albanote_project/domain/repository/remote/external_api_repository.dart';
 import 'package:albanote_project/domain/repository/remote/workplace_repository.dart';
 import 'package:albanote_project/etc/custom_class/BaseController.dart';
+import 'package:albanote_project/presentation/view/app/workplace/boss/boss_workplace_container_view.dart';
 import 'package:albanote_project/presentation/view/app/workplace/boss/create_workplace/workplace_boss_info_input_view.dart';
 import 'package:albanote_project/presentation/view/app/workplace/boss/create_workplace/workplace_business_input_view.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +35,7 @@ class CreateWorkplaceViewModel extends BaseViewModel {
 
   RxBool isCommuteRangeSet = false.obs;
   RxInt selectRadius = 25.obs;
-  Rx<CoordinateModel> selectCoord = CoordinateModel(null, null).obs;
+  Rx<CoordinateModel> selectCoord = CoordinateModel().obs;
   RxList<CircleOverlay> selectLocationOverlay = RxList<CircleOverlay>();
 
   Future<String?> getAccessToken() async {
@@ -41,13 +43,15 @@ class CreateWorkplaceViewModel extends BaseViewModel {
   }
 
   /// 일터 사장님 정보 입력 화면으로 이동
-  void startCreateWorkplaceInputBossInfoView() {
-    Get.to(const WorkplaceBossInfoInputView(), binding: BindingsBuilder(() => {Get.put(this)}));
+  void startCreateWorkplaceInputBossInfoView() async {
+    var result = await Get.to(const WorkplaceBossInfoInputView(), binding: BindingsBuilder(() => {Get.put(this)}));
+    if (result != null) Get.back(result: result);
   }
 
   /// 사업자 정보 입력 화면으로 이동
-  void startWorkplaceBusinessInputView() {
-    Get.to(const WorkplaceBusinessInputView(), binding: BindingsBuilder(() => {Get.put(this)}));
+  void startWorkplaceBusinessInputView() async {
+    var result = await Get.to(const WorkplaceBusinessInputView(), binding: BindingsBuilder(() => {Get.put(this)}));
+    if (result != null) Get.back(result: result);
   }
 
   /// 사업자 정보 검증
@@ -62,10 +66,30 @@ class CreateWorkplaceViewModel extends BaseViewModel {
       businessName,
       typeObBusiness.value,
     );
-    result.when(
-        success: (data) {
-          print('check business result = ' + data.data.toString());
-        },
-        error: (e) {});
+    result.when(success: (data) {
+      print('check business result = ' + data.data.toString());
+    }, error: (e) {
+      print('check business error = ' + e.message.toString());
+    });
+  }
+
+  /// 일터 생성
+  void postCreateWorkplace() async {
+    var dto = CreateWorkplaceRequestDTO(
+        name: workplaceName.value,
+        address: workplaceAddress.value,
+        detailAddress: workplaceDetailAddress.value,
+        commuteRecordCoordinate: selectCoord.value,
+        commuteRecordRadius: selectRadius.value,
+        bossEmployeeRankName: bossRankName.value,
+        bossEmployeeName: bossName.value,
+        bossEmployeePhoneNumber: bossPhoneNumber.value);
+    var response = await _workplaceOfBossRepository.postCreateWorkplace(dto);
+    response.when(success: (data) {
+      Get.back(result: {'createdWorkplaceId': data});
+    }, error: (e) {
+      debugPrint('create workplace error : ' + e.message.toString());
+      showSnackBarByMessage();
+    });
   }
 }

@@ -10,4 +10,6 @@ abstract class ExternalApiRepository extends BaseRepository {
   /// 사업자 인증
   Future<ResponseEntity<CheckBusinessResponseDTO>> postCheckBusiness(
       String businessNo, String startDate, String representativeName, String businessName, String businessType);
+
+  //
 }

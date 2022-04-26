@@ -2,8 +2,9 @@ import 'dart:convert';
 
 import 'package:albanote_project/config/repository_config.dart';
 import 'package:albanote_project/data/entity/common/response_entity.dart';
-import 'package:albanote_project/data/entity/workplace_of_boss/workplace_info_of_boss_response_dto.dart';
-import 'package:albanote_project/data/entity/workplace_of_boss/workplace_request_simple_response_dto.dart';
+import 'package:albanote_project/data/entity/request/workplace_of_boss/create_workplace_request_dto.dart';
+import 'package:albanote_project/data/entity/response/workplace_of_boss/workplace_info_of_boss_response_dto.dart';
+import 'package:albanote_project/data/entity/response/workplace_of_boss/workplace_request_simple_response_dto.dart';
 import 'package:albanote_project/domain/model/page_request_model.dart';
 import 'package:albanote_project/domain/repository/local/local_shared_preferences.dart';
 import 'package:dio/dio.dart';
@@ -17,7 +18,7 @@ class WorkplaceOfBossRepositoryImpl extends WorkplaceOfBossRepository {
 
   static const _baseUri = RepositoryConfig.serverUrl + '/workplace';
 
-  /// 대표 일터 조회
+  /// 일터 상세 조회
   /// @param workplaceId - null 이면 대표 일터
   @override
   Future<ResponseEntity<WorkplaceInfoOfBossResponseDTO>> getWorkplaceInfoOfBoss(int? workplaceId) async {
@@ -39,10 +40,11 @@ class WorkplaceOfBossRepositoryImpl extends WorkplaceOfBossRepository {
     }
   }
 
+  /// 일터 리스트 조회
   @override
   Future getWorkplaceList(int memberId) async {}
 
-  /// 일터 리스트 조회
+  /// 일터 요청 리스트 조회
   @override
   Future<ResponseEntity<List<WorkplaceRequestSimpleResponseDTO>>> getWorkplaceRequestList(
     int workplaceId,
@@ -60,6 +62,30 @@ class WorkplaceOfBossRepositoryImpl extends WorkplaceOfBossRepository {
             .map((e) => WorkplaceRequestSimpleResponseDTO.fromJson(e))
             .toList();
         return ResponseEntity.success(result);
+      } else {
+        return onErrorHandler(response);
+      }
+    } on DioError catch (e) {
+      return onDioErrorHandler(e);
+    }
+  }
+
+  /// ************************ post ********************/
+
+  /// 일터 생성
+  @override
+  Future<ResponseEntity<int>> postCreateWorkplace(CreateWorkplaceRequestDTO dto) async {
+    const uri = _baseUri + '/createWorkplace';
+    try {
+      var accessToken = await localSP.accessToken;
+      var memberId = await localSP.memberId;
+      var response = await dio.post(
+        uri,
+        data: jsonEncode(dto.copyWith(bossMemberId: memberId).toJson()),
+        options: Options(headers: {'Authorization': accessToken}),
+      );
+      if (response.statusCode == HttpStatus.ok) {
+        return ResponseEntity.success(response.data as int);
       } else {
         return onErrorHandler(response);
       }

@@ -1,7 +1,7 @@
-import 'package:albanote_project/data/entity/workplace_of_boss/workplace_request_simple_response_dto.dart';
+import 'package:albanote_project/data/entity/response/workplace_of_boss/workplace_request_simple_response_dto.dart';
 import 'package:albanote_project/etc/custom_class/base_view.dart';
 import 'package:albanote_project/presentation/component/avatar_widget.dart';
-import 'package:albanote_project/presentation/view_model/app/workplace/boss/boss_workplace_request_list_view_model.dart';
+import 'package:albanote_project/presentation/view_model/app/workplace/boss/request/boss_workplace_request_list_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -13,14 +13,23 @@ class BossWorkplaceRequestListView extends BaseView<BossWorkplaceRequestViewMode
 
   @override
   Widget build(BuildContext context) {
+    /// 초기 데이터 조회
+    controller.workplaceId = (Get.arguments as Map<String, int>)['workplaceId']!;
+    controller.getWorkplaceRequestList();
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: buildBaseAppBar(title: "전체 요청"),
       body: Container(
         decoration: const BoxDecoration(border: Border(top: BorderSide(color: Colors.black12))),
-        child: disallowIndicatorWidget(
-          child: SingleChildScrollView(
-              child: Obx(() => Column(crossAxisAlignment: CrossAxisAlignment.start, children: _buildAllRequest()))),
+        child: Obx(
+          () => controller.workplaceRequests.isEmpty
+              ? const Center(child: Text('받은 요청이 없습니다.'))
+              : disallowIndicatorWidget(
+                  child: SingleChildScrollView(
+                      controller: controller.scrollController,
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: _buildAllRequest())),
+                ),
         ),
       ),
     );

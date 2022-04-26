@@ -1,5 +1,5 @@
 import 'package:albanote_project/etc/custom_class/base_view.dart';
-import 'package:albanote_project/presentation/view_model/app/workplace/boss/boss_workplace_request_detail_view_model.dart';
+import 'package:albanote_project/presentation/view_model/app/workplace/boss/request/boss_workplace_request_detail_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

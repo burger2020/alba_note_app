@@ -11,29 +11,10 @@ class WorkplaceBossInfoInputView extends BaseView<CreateWorkplaceViewModel> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: buildBaseAppBar(
         title: "일터 생성",
         leadIcon: Icons.arrow_back_ios_rounded,
-        actions: [
-          Obx(() {
-            var enable = false;
-            if (controller.bossName.value.length > 1 &&
-                controller.bossRankName.value.length > 1 &&
-                controller.bossPhoneNumber.value.length > 11) {
-              enable = true;
-            }
-            return enable
-                ? GestureDetector(
-                    child: const Padding(
-                        padding: EdgeInsets.all(20.0),
-                        child: Center(child: Text("다음", style: TextStyle(fontSize: 15, color: MyColors.primary)))),
-                    onTap: () => controller.startWorkplaceBusinessInputView(),
-                  )
-                : const Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: Center(child: Text("다음", style: TextStyle(fontSize: 15, color: Colors.grey))));
-          })
-        ],
       ),
       body: disallowIndicatorWidget(
         child: SingleChildScrollView(
@@ -59,6 +40,22 @@ class WorkplaceBossInfoInputView extends BaseView<CreateWorkplaceViewModel> {
                   textInputAction: TextInputAction.done,
                   onChange: (t) => controller.bossPhoneNumber(t),
                 ),
+                const SizedBox(height: 20),
+                Obx(() {
+                  var isEnable = false;
+                  if (controller.bossName.value.length > 1 &&
+                      controller.bossRankName.value.length > 1 &&
+                      controller.bossPhoneNumber.value.length > 11) {
+                    isEnable = true;
+                  }
+                  return buildBottomButton(
+                    text: '일터 생성',
+                    isEnable: isEnable,
+                    onPositiveTab: () {
+                      controller.postCreateWorkplace();
+                    },
+                  );
+                }),
               ],
             ),
           ),

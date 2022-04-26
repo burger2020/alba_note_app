@@ -14,7 +14,7 @@ class AppViewModel extends BaseViewModel {
 
   LocalSharedPreferences localSharedPreferences;
 
-  Rx<MemberType> memberType = MemberType.EMPLOYEE.obs;
+  Rx<MemberType> memberType = MemberType.NULL.obs;
   var pageIndex = 0.obs;
   List<int> bottomHistory = [0];
 

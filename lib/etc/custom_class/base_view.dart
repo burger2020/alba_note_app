@@ -19,14 +19,18 @@ abstract class BaseView<T extends BaseViewModel> extends GetView<T> {
   }
 
   /// 기본 앱바 생성
-  AppBar buildBaseAppBar({required String title, TextStyle? textStyle, leadIcon = Icons.close, List<Widget>? actions}) {
+  AppBar buildBaseAppBar(
+      {required String title, TextStyle? textStyle, IconData? leadIcon = Icons.close, List<Widget>? actions}) {
     return AppBar(
       backgroundColor: Colors.white,
       actions: actions ?? [],
       elevation: 0,
-      title: Text(title, style: textStyle ?? const TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+      title: Text(title,
+          style: textStyle ?? const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17)),
       centerTitle: true,
-      leading: GestureDetector(child: Icon(leadIcon, color: Colors.black), onTap: () => Get.back()),
+      leading: leadIcon == null
+          ? Container()
+          : GestureDetector(child: Icon(leadIcon, color: Colors.black), onTap: () => Get.back()),
       shape: const Border(bottom: BorderSide(color: Colors.black12)),
     );
   }

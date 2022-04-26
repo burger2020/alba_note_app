@@ -30,9 +30,9 @@ class CommuteRangeSetView extends BaseView<CreateWorkplaceViewModel> {
                 height: Get.height / 2,
                 child: NaverMap(
                   initialCameraPosition: CameraPosition(
-                    target: controller.selectCoord.value.latitude == null
+                    target: controller.selectCoord.value.lng == null
                         ? const LatLng(37.566570, 126.978442)
-                        : LatLng(controller.selectCoord.value.latitude!, controller.selectCoord.value.longitude!),
+                        : LatLng(controller.selectCoord.value.lat!, controller.selectCoord.value.lng!),
                     zoom: 17,
                   ),
                   locationButtonEnable: true,
@@ -146,7 +146,7 @@ class CommuteRangeSetView extends BaseView<CreateWorkplaceViewModel> {
               /// 지정 취소 버튼
               child: const Text('지정 취소', style: TextStyle(fontSize: 13, color: Colors.grey)),
               onTap: () {
-                controller.selectCoord.value = CoordinateModel(null, null);
+                controller.selectCoord.value = CoordinateModel();
                 controller.isCommuteRangeSet(false);
                 controller.selectLocationOverlay([]);
                 Get.back();
@@ -175,7 +175,8 @@ class CommuteRangeSetView extends BaseView<CreateWorkplaceViewModel> {
               onTap: () async {
                 if (controller.selectLocationOverlay.isNotEmpty) {
                   var position = await naverMapController!.getCameraPosition();
-                  controller.selectCoord.value = CoordinateModel(position.target.latitude, position.target.longitude);
+                  controller.selectCoord.value =
+                      CoordinateModel(lat: position.target.latitude, lng: position.target.longitude);
                   controller.isCommuteRangeSet(true);
                   Get.back();
                 }

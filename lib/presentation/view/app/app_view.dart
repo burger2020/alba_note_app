@@ -41,7 +41,7 @@ class AppView extends BaseView<AppViewModel> {
             showUnselectedLabels: false,
             currentIndex: controller.pageIndex.value,
             selectedIconTheme: const IconThemeData(color: Colors.black),
-            unselectedIconTheme: const IconThemeData(color: Colors.black12) ,
+            unselectedIconTheme: const IconThemeData(color: Colors.black12),
             elevation: 0,
             onTap: controller.changeBottomNave,
             items: const [
@@ -69,8 +69,10 @@ class AppView extends BaseView<AppViewModel> {
               Obx(() {
                 if (controller.memberType.value == MemberType.BOSS) {
                   return const BossWorkplaceContainerView();
-                } else {
+                } else if (controller.memberType.value == MemberType.EMPLOYEE) {
                   return const EmployeeWorkplaceMainView();
+                } else {
+                  return Container();
                 }
               }),
               const Center(),

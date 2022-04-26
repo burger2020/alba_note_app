@@ -1,6 +1,6 @@
-import 'package:albanote_project/data/entity/workplace_of_boss/todo_record_response_dto.dart';
-import 'package:albanote_project/data/entity/workplace_of_boss/work_record_response_dto.dart';
-import 'package:albanote_project/data/entity/workplace_of_boss/workplace_request_simple_response_dto.dart';
+import 'package:albanote_project/data/entity/response/workplace_of_boss/todo_record_response_dto.dart';
+import 'package:albanote_project/data/entity/response/workplace_of_boss/work_record_response_dto.dart';
+import 'package:albanote_project/data/entity/response/workplace_of_boss/workplace_request_simple_response_dto.dart';
 import 'package:albanote_project/etc/custom_class/base_view.dart';
 import 'package:albanote_project/etc/util.dart';
 import 'package:albanote_project/presentation/component/avatar_widget.dart';
@@ -24,8 +24,8 @@ class BossWorkplaceMainView extends BaseView<BossWorkplaceMainViewModel> {
                   title: "새로운 요청 ${controller.workplace.value.workplaceRequest?.length ?? 0}개",
                   list: List.generate(controller.workplace.value.workplaceRequest?.length ?? 0,
                       (index) => _buildRequestView(controller.workplace.value.workplaceRequest![index])),
-                  emptyText: '새로운 요청이 없어요',
-                  allView: () => controller.startRequestView()),
+                  emptyText: '새로운 요청이 없어요.',
+                  allView: () => controller.startRequestListView()),
               const SizedBox(height: 40),
               // 현재 근무자
               _buildSectionCommonWidget(
@@ -33,7 +33,7 @@ class BossWorkplaceMainView extends BaseView<BossWorkplaceMainViewModel> {
                       "현재 근무자 ${controller.workplace.value.currentEmployees?.length ?? 0}/${controller.workplace.value.totalEmployeeCount}명",
                   list: List.generate(controller.workplace.value.currentEmployees?.length ?? 0,
                       (index) => _buildCurrentWorkingEmployeeView(controller.workplace.value.currentEmployees![index])),
-                  emptyText: '현재 근무자가 없어요',
+                  emptyText: '현재 근무자가 없어요.',
                   allView: () {
                     print("현재 근무자 전체보기");
                   }),
@@ -43,7 +43,7 @@ class BossWorkplaceMainView extends BaseView<BossWorkplaceMainViewModel> {
                       "오늘 완료된 할 일 ${controller.workplace.value.completedTodos?.length ?? 0}/${controller.workplace.value.totalTodoCount}",
                   list: List.generate(controller.workplace.value.completedTodos?.length ?? 0,
                       (index) => _buildCompletedTodo(controller.workplace.value.completedTodos![index])),
-                  emptyText: '완료된 할 일이 없어요',
+                  emptyText: '완료된 할 일이 없어요.',
                   allView: () {}),
               const SizedBox(height: 40),
             ],
@@ -54,14 +54,12 @@ class BossWorkplaceMainView extends BaseView<BossWorkplaceMainViewModel> {
   /// 메뉴 아이콘 그리드뷰
   Widget _tabView() {
     var iconList = [
-      _buildMenuIconTab(Icons.check_box, Colors.deepPurple, "할 일", () {}),
-      _buildMenuIconTab(Icons.watch_later, Colors.deepPurple, "현재 근무자", () {}),
+      _buildMenuIconTab(Icons.check_box, Colors.deepPurple, "할 일 관리", () => controller.startTodoListView()),
+      _buildMenuIconTab(Icons.watch_later, Colors.deepPurple, "근무 관리", () => controller.startWorkHistoryListView()),
       _buildMenuIconTab(
-          Icons.notification_important_rounded, Colors.deepPurple, "요청", () => controller.startRequestView()),
+          Icons.notification_important_rounded, Colors.deepPurple, "요청 관리", () => controller.startRequestListView()),
       _buildMenuIconTab(Icons.settings, Colors.deepPurple, "일터 관리", () {}),
-      _buildMenuIconTab(Icons.people, Colors.deepPurple, "일터 관리", () {}),
-      _buildMenuIconTab(Icons.work, Colors.deepPurple, "직원 관리", () {}),
-      _buildMenuIconTab(Icons.payment, Colors.deepPurple, "근무 내역", () {}),
+      _buildMenuIconTab(Icons.people, Colors.deepPurple, "직원 관리", () {}),
       _buildMenuIconTab(Icons.person, Colors.deepPurple, "프로필 관리", () {})
     ];
     return GridView.builder(
@@ -69,7 +67,7 @@ class BossWorkplaceMainView extends BaseView<BossWorkplaceMainViewModel> {
       shrinkWrap: true,
       itemCount: iconList.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4, childAspectRatio: 1, mainAxisSpacing: 10, crossAxisSpacing: 0),
+          crossAxisCount: 3, childAspectRatio: 1.4, mainAxisSpacing: 0, crossAxisSpacing: 0),
       itemBuilder: (context, index) {
         return iconList[index];
       },
@@ -111,7 +109,8 @@ class BossWorkplaceMainView extends BaseView<BossWorkplaceMainViewModel> {
       ),
       const SizedBox(height: 10),
       list.isEmpty
-          ? Container(child: Text(emptyText))
+          ? Container(
+              padding: const EdgeInsets.only(top: 10), child: Text(emptyText, style: TextStyle(color: Colors.grey)))
           : SizedBox(
               width: double.infinity,
               child: disallowIndicatorWidget(
@@ -189,6 +188,7 @@ class BossWorkplaceMainView extends BaseView<BossWorkplaceMainViewModel> {
     );
   }
 
+  /// 완료된 할 일
   Widget _buildCompletedTodo(TodoRecordResponseDTO todo) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),

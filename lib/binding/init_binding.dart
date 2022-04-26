@@ -1,10 +1,12 @@
 import 'package:albanote_project/data/repository/common_repository_impl.dart';
+import 'package:albanote_project/data/repository/external_api_repository_impl.dart';
 import 'package:albanote_project/data/repository/login_repository_impl.dart';
 import 'package:albanote_project/data/repository/member_repository_impl.dart';
 import 'package:albanote_project/data/repository/workplace_repository_impl.dart';
 import 'package:albanote_project/domain/repository/local/local_shared_preferences.dart';
 import 'package:albanote_project/presentation/view_model/app/app_view_model.dart';
 import 'package:albanote_project/presentation/view_model/app/workplace/boss/boss_workplace_view_model.dart';
+import 'package:albanote_project/presentation/view_model/app/workplace/boss/create_workplace_view_model.dart';
 import 'package:albanote_project/presentation/view_model/login/login_page_view_model.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
@@ -25,12 +27,14 @@ class InitBinding extends Bindings {
     var loginRepository = LoginRepositoryImpl(dio, localSharedPreferences);
     var memberRepository = MemberRepositoryImpl(dio, localSharedPreferences);
     var workplaceOfBossRepository = WorkplaceOfBossRepositoryImpl(dio, localSharedPreferences);
+    var externalApiRepository = ExternalApiRepositoryImpl(dio, localSharedPreferences);
 
     Get.put(RootController(localSharedPreferences, commonRepository, memberRepository));
     Get.put(BottomNavController(), permanent: true);
+    Get.put(CreateWorkplaceViewModel(workplaceOfBossRepository, externalApiRepository));
     Get.lazyPut(() => AppViewModel(localSharedPreferences));
     Get.lazyPut(() => LoginPageViewModel(loginRepository, localSharedPreferences, memberRepository));
 
-    Get.lazyPut(() =>BossWorkplaceMainViewModel(workplaceOfBossRepository));
+    Get.lazyPut(() => BossWorkplaceMainViewModel(workplaceOfBossRepository));
   }
 }

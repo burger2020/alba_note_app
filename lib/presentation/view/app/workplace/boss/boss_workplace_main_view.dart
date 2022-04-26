@@ -110,16 +110,14 @@ class BossWorkplaceMainView extends BaseView<BossWorkplaceMainViewModel> {
       const SizedBox(height: 10),
       list.isEmpty
           ? Container(
-              padding: const EdgeInsets.only(top: 10), child: Text(emptyText, style: TextStyle(color: Colors.grey)))
+              padding: const EdgeInsets.only(top: 10), child: Text(emptyText, style: const TextStyle(color: Colors.grey)))
           : SizedBox(
               width: double.infinity,
-              child: disallowIndicatorWidget(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [const SizedBox(width: 15), ...list, const SizedBox(width: 15)],
-                  ),
+              child: disallowIndicatorScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [const SizedBox(width: 15), ...list, const SizedBox(width: 15)],
                 ),
               ),
             )

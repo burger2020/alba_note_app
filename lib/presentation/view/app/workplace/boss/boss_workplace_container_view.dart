@@ -16,7 +16,7 @@ class BossWorkplaceContainerView extends BaseView<BossWorkplaceMainViewModel> {
               backgroundColor: Colors.white,
               appBar: buildBaseAppBar(
                 leadIcon: null,
-                title: controller.workplace.value.workplaceTitle!,
+                title: '알바노트',
                 textStyle: const TextStyle(fontWeight: FontWeight.bold, color: MyColors.primary, fontSize: 15),
               ),
               body: Container(

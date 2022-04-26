@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:albanote_project/data/entity/response/workplace_of_boss/workplace_request_simple_response_dto.dart';
+import 'package:albanote_project/etc/colors.dart';
 import 'package:albanote_project/etc/custom_class/base_view.dart';
 import 'package:albanote_project/presentation/component/avatar_widget.dart';
 import 'package:albanote_project/presentation/view_model/app/workplace/boss/request/boss_workplace_request_list_view_model.dart';
@@ -20,16 +23,51 @@ class BossWorkplaceRequestListView extends BaseView<BossWorkplaceRequestViewMode
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: buildBaseAppBar(title: "전체 요청"),
-      body: Container(
-        decoration: const BoxDecoration(border: Border(top: BorderSide(color: Colors.black12))),
-        child: Obx(
-          () => controller.workplaceRequests.isEmpty
-              ? const Center(child: Text('받은 요청이 없습니다.'))
-              : disallowIndicatorWidget(
-                  child: SingleChildScrollView(
-                      controller: controller.scrollController,
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: _buildAllRequest())),
-                ),
+      body: progressWidget(
+        child: Container(
+          decoration: const BoxDecoration(border: Border(top: BorderSide(color: Colors.black12))),
+          child: Obx(
+            () => controller.pageRequest.value.isLoading
+                ? const Center(child: Text('받은 요청이 없습니다.'))
+                : disallowIndicatorScrollView(
+                    controller: controller.scrollController,
+                    padding: const EdgeInsets.only(bottom: 50),
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Obx(
+                        () => Padding(
+                          padding: const EdgeInsets.only(top: 10, right: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: 30,
+                                height: 30,
+                                child: Radio(
+                                  onChanged: (value) => controller.onFilterChange(value as bool),
+                                  groupValue: controller.isOnlyIncomplete.value,
+                                  value: false,
+                                ),
+                              ),
+                              const Text('전체 요청'),
+                              const SizedBox(width: 10),
+                              SizedBox(
+                                width: 30,
+                                height: 30,
+                                child: Radio(
+                                  onChanged: (value) => controller.onFilterChange(value as bool),
+                                  groupValue: controller.isOnlyIncomplete.value,
+                                  value: true,
+                                ),
+                              ),
+                              const Text('대기 요청')
+                            ],
+                          ),
+                        ),
+                      ),
+                      ..._buildAllRequest(),
+                    ])),
+          ),
         ),
       ),
     );
@@ -38,7 +76,6 @@ class BossWorkplaceRequestListView extends BaseView<BossWorkplaceRequestViewMode
   /// 전체 요청
   List<Widget> _buildAllRequest() {
     if (controller.workplaceRequests.isEmpty) return [];
-    controller.workplaceRequests.sort((a, b) => a.createdDate!.compareTo(b.createdDate!));
     var requests = controller.workplaceRequests;
     var dateFormat = DateFormat('yyyy. MM. dd EE');
 
@@ -59,22 +96,36 @@ class BossWorkplaceRequestListView extends BaseView<BossWorkplaceRequestViewMode
 
   /// 날짜 구분 위젯
   Widget _buildDateFormatWidget(String date) {
+    var dateText = date
+        .replaceFirst('Mon', '월')
+        .replaceFirst('Tue', '화')
+        .replaceFirst('Wed', '수')
+        .replaceFirst('Thu', '목')
+        .replaceFirst('Fri', '금')
+        .replaceFirst('Sat', '토')
+        .replaceFirst('Sun', '일');
     return Padding(
-      padding: const EdgeInsets.only(left: 20.0, right: 20, top: 20, bottom: 8),
-      child: Text(date, style: const TextStyle(fontSize: 13, color: Colors.grey)),
+      padding: const EdgeInsets.only(left: 20.0, right: 20, top: 30, bottom: 10),
+      child: Text(dateText, style: const TextStyle(fontSize: 13, color: Colors.grey)),
     );
   }
 
-  /// 요청 아이템
+  /// 요청 리스트 아이템
   Widget _buildRequestItem(WorkplaceRequestSimpleResponseDTO request) {
     var avatar = AvatarWidget(thumbPath: request.requestMember!.imageUrl, type: AvatarType.type1, size: 30);
     var nameAndRank = Text("${request.requestMember!.name ?? ''}(${request.requestMember!.rankName ?? ''})");
     var requestStatus =
-        Text((request.requestType?.getRequestTypeText() ?? '') + ' - ' + request.getCompleteStatusText());
+        Text((request.requestType?.getRequestTypeText() ?? '') + ' - ' + request.getCompleteStatusText(),
+            style: TextStyle(
+                color: request.isCompleted == null
+                    ? Colors.black
+                    : request.isCompleted == true
+                        ? MyColors.primary.withAlpha(127)
+                        : Colors.black26));
 
     return GestureDetector(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 7),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Row(children: [
             avatar,

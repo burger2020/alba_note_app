@@ -16,10 +16,8 @@ class BossWorkplaceTodoListView extends BaseView<BossWorkplaceWorkHistoryListVie
         child: Obx(
           () => controller.workplaceWorkHistory.value == 1
               ? const Center(child: Text('이 날에 등록된 할 일이 없습니다.'))
-              : disallowIndicatorWidget(
-                  child: SingleChildScrollView(
-                      child: Obx(() => Column(crossAxisAlignment: CrossAxisAlignment.start, children: _buildTodo()))),
-                ),
+              : disallowIndicatorScrollView(
+                  child: Obx(() => Column(crossAxisAlignment: CrossAxisAlignment.start, children: _buildTodo()))),
         ),
       ),
     );

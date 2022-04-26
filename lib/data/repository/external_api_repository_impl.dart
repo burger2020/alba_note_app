@@ -22,7 +22,6 @@ class ExternalApiRepositoryImpl extends ExternalApiRepository {
   ) async {
     var url = 'https://api.odcloud.kr/api/nts-businessman/v1/validate';
     try {
-      // todo 요청을 간단하게... 사업자만? 사업자, 시작일, 대표자명?
       var body = jsonEncode({
         'businesses': [
           {

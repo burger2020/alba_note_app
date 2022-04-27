@@ -16,7 +16,7 @@ class WorkplaceBossInfoInputView extends BaseView<CreateWorkplaceViewModel> {
         title: "일터 생성",
         leadIcon: Icons.arrow_back_ios_rounded,
       ),
-      body: disallowIndicatorWidget(
+      body: disallowIndicatorScrollView(
         child: SingleChildScrollView(
           child: Container(
             color: Colors.white,

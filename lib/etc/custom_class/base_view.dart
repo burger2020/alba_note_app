@@ -8,6 +8,17 @@ abstract class BaseView<T extends BaseViewModel> extends GetView<T> {
   const BaseView({Key? key}) : super(key: key);
 
   /// overscroll never
+  Widget disallowIndicatorScrollView(
+      {required Widget child,
+      ScrollController? controller,
+      EdgeInsets? padding,
+      Axis scrollDirection = Axis.vertical}) {
+    return disallowIndicatorWidget(
+      child: SingleChildScrollView(
+          controller: controller, padding: padding, child: child, scrollDirection: scrollDirection),
+    );
+  }
+
   Widget disallowIndicatorWidget({required Widget child}) {
     return NotificationListener<OverscrollIndicatorNotification>(
       onNotification: (overScroll) {
@@ -43,7 +54,7 @@ abstract class BaseView<T extends BaseViewModel> extends GetView<T> {
         return controller.isProgress
             ? Container(
                 child: const Center(child: CircularProgressIndicator()),
-                decoration: const BoxDecoration(color: Colors.black54))
+                decoration: const BoxDecoration(color: Colors.black12))
             : Container();
       }),
     ]);

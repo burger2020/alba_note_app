@@ -8,6 +8,9 @@ import 'package:albanote_project/presentation/view/app/workplace/boss/request/bo
 import 'package:albanote_project/presentation/view/app/workplace/boss/todo/boss_workplace_todo_list_view.dart';
 import 'package:albanote_project/presentation/view/app/workplace/boss/work_history/boss_workplace_work_history_list_view.dart';
 import 'package:albanote_project/presentation/view_model/app/workplace/boss/create_workplace_view_model.dart';
+import 'package:albanote_project/presentation/view_model/app/workplace/boss/request/boss_workplace_request_list_view_model.dart';
+import 'package:albanote_project/presentation/view_model/app/workplace/boss/todo/boss_workplace_todo_list_view_model.dart';
+import 'package:albanote_project/presentation/view_model/app/workplace/boss/work_history/boss_workplace_todo_list_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -48,17 +51,29 @@ class BossWorkplaceMainViewModel extends BaseViewModel {
   /// 할일 리스트 화면으로 이동
 
   void startTodoListView() {
-    Get.to(const BossWorkplaceTodoListView(), arguments: {'workplaceId': workplace.value.workplaceId!});
+    Get.to(
+      const BossWorkplaceTodoListView(),
+      arguments: {'workplaceId': workplace.value.workplaceId!},
+      binding: BindingsBuilder(() => {Get.put(BossWorkplaceTodoListViewModel(_workplaceOfBossRepository))}),
+    );
   }
 
   /// 근무 내역 리스트 화면으로 이동
   void startWorkHistoryListView() {
-    Get.to(const BossWorkplaceWorkHistoryListView(), arguments: {'workplaceId': workplace.value.workplaceId!});
+    Get.to(
+      const BossWorkplaceWorkHistoryListView(),
+      arguments: {'workplaceId': workplace.value.workplaceId!},
+      binding: BindingsBuilder(() => {Get.put(BossWorkplaceWorkHistoryListViewModel(_workplaceOfBossRepository))}),
+    );
   }
 
   /// 요청 리스트 화면으로 이동
   void startRequestListView() {
-    Get.to(const BossWorkplaceRequestListView(), arguments: {'workplaceId': workplace.value.workplaceId!});
+    Get.to(
+      const BossWorkplaceRequestListView(),
+      arguments: {'workplaceId': workplace.value.workplaceId!},
+      binding: BindingsBuilder(() => {Get.put(BossWorkplaceRequestViewModel(_workplaceOfBossRepository))}),
+    );
   }
 
   /// 사장 일터 생성화면 이동

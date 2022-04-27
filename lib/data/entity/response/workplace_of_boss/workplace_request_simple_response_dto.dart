@@ -41,7 +41,7 @@ extension WorkplaceRequestSimpleResponseDTOExtension on WorkplaceRequestSimpleRe
   // 요청 상태에 따른 문자
   String getCompleteStatusText() {
     return isCompleted == null
-        ? '요청 대기'
+        ? '대기 요청'
         : isCompleted!
             ? '수락됨'
             : '거절됨';

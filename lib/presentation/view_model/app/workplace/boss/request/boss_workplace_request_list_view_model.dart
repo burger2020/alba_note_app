@@ -15,29 +15,33 @@ class BossWorkplaceRequestViewModel extends BaseViewModel {
 
   final scrollController = ScrollController();
 
-  PageRequestModel pageRequest = PageRequestModel();
+  var isOnlyIncomplete = false.obs;
+
+  Rx<PageRequestModel> pageRequest = PageRequestModel().obs;
   RxList<WorkplaceRequestSimpleResponseDTO> workplaceRequests = RxList<WorkplaceRequestSimpleResponseDTO>();
 
   @override
   void onInit() {
     super.onInit();
-    scrollController.addListener(() {
-      if (pageRequest.isLast) return;
-      if (scrollController.position.extentAfter <= 0 && pageRequest.isLoading == false) {
-        print('하단');
-      }
-    });
+    setPaginationScroll(scrollController, pageRequest.value, () => getWorkplaceRequestList());
   }
 
   /// 일터 요청 조회
   Future getWorkplaceRequestList() async {
-    var response = await _workplaceOfBossRepository.getWorkplaceRequestList(workplaceId, pageRequest, false);
-    response.when(
-        success: (data) {
-          workplaceRequests.addAll(data);
-          pageRequest.setResult(data);
-        },
-        error: (e) {});
+    showProgress(true);
+    pageRequest.value.isLoading = true;
+    var response = await _workplaceOfBossRepository.getWorkplaceRequestList(
+        workplaceId, pageRequest.value, isOnlyIncomplete.value);
+    response.when(success: (data) {
+      data.sort((a, b) => b.createdDate!.compareTo(a.createdDate!));
+      workplaceRequests.addAll(data);
+      pageRequest.value.setResult(data);
+      pageRequest(pageRequest.value);
+      showProgress(false);
+    }, error: (e) {
+      pageRequest.value.isLoading = false;
+      showProgress(false);
+    });
   }
 
   /// 요청 상세화면 전환
@@ -45,5 +49,19 @@ class BossWorkplaceRequestViewModel extends BaseViewModel {
     Get.to(const BossWorkplaceRequestDetailView(), binding: BindingsBuilder((() {
       BossWorkplaceRequestDetailViewModel(_workplaceOfBossRepository, requestId);
     })));
+  }
+
+  /// 필터 상태 변경
+  void onFilterChange(bool value) {
+    if (isOnlyIncomplete.value == value) return;
+    isOnlyIncomplete(value);
+    onRefreshRequestList();
+  }
+
+  /// 새로고침
+  void onRefreshRequestList() {
+    pageRequest.value.setRefresh();
+    workplaceRequests.clear();
+    getWorkplaceRequestList();
   }
 }

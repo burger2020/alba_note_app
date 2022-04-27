@@ -58,10 +58,13 @@ class BaseRepository {
           var data = (response.data as List<dynamic>).map((e) => Map<String, dynamic>.from(e)).toList();
           return await onSuccess(data as T);
         } else if (T.toString().contains("Map<String, dynamic>")) {
-          return await onSuccess(response.data as T);
+          try {
+            return await onSuccess(response.data as T);
+          } catch (e) {
+            return await onSuccess(jsonDecode(response.data));
+          }
         } else {
           return await onSuccess(response.data as T);
-          //   return await onSuccess(jsonDecode(response.data));
         }
       } else {
         return onDioErrorHandler<T, F>(response.data,
@@ -139,13 +142,13 @@ class BaseRepository {
   Future<ResponseEntity<MemberTokenInfoDTO>> postRefreshToken() async {
     const uri = RepositoryConfig.serverUrl + '/common/refreshToken';
     final memberId = await localSP.memberId;
-    final accessToken = await localSP.accessToken;
+    final refreshToken = await localSP.refreshToken;
 
     return request<Map<String, dynamic>, MemberTokenInfoDTO>(
       uri: uri,
       body: {'memberId': memberId},
       method: HttpMethod.POST,
-      authorization: accessToken,
+      authorization: refreshToken,
       onSuccess: (data) => successDTO(MemberTokenInfoDTO.fromJson(Map<String, dynamic>.from(data))),
       onError: (error) => error,
     );

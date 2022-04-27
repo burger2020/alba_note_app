@@ -13,6 +13,8 @@ class LocalSharedPreferences {
 
   Future<String?> get accessToken => findMemberAccessToken();
 
+  Future<String?> get refreshToken => findMemberRefreshToken();
+
   Future<int?> get memberId => findMemberId();
 
   /// 멤버 정보 조회
@@ -39,9 +41,20 @@ class LocalSharedPreferences {
     }
   }
 
+  Future<String?> findMemberRefreshToken() async {
+    var memberInfo = await findMemberInfo();
+    if (memberInfo?.memberTokenInfo?.accessToken != null) {
+      return "Bearer " + memberInfo!.memberTokenInfo!.refreshToken.toString();
+    } else {
+      return '';
+    }
+  }
 
-  void updateMemberTokenInfo(MemberTokenInfoDTO tokenInfo){
-
+  /// 토큰 정보 업데이트
+  void updateMemberTokenInfo(MemberTokenInfoDTO tokenInfo) async {
+    var memberInfo = await findMemberInfo();
+    memberInfo = memberInfo!.copyWith(memberTokenInfo: tokenInfo);
+    updateMemberInfo(memberInfo);
   }
 
   /// 멤버 id 조회

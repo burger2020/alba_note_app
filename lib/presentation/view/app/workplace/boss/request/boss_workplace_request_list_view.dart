@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:albanote_project/data/entity/response/workplace_of_boss/workplace_request_simple_response_dto.dart';
 import 'package:albanote_project/etc/colors.dart';
 import 'package:albanote_project/etc/custom_class/base_view.dart';
@@ -8,7 +6,6 @@ import 'package:albanote_project/presentation/component/avatar_widget.dart';
 import 'package:albanote_project/presentation/view_model/app/workplace/boss/request/boss_workplace_request_list_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 /// 요청 전체 목록 화면
 /// todo 요청 미승인만 보기 체크박스 ㄲ

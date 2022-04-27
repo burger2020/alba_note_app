@@ -1,4 +1,6 @@
 import 'package:albanote_project/config/repository_config.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 
 class Util {
@@ -43,7 +45,7 @@ class Util {
     } else if (diff.inMinutes.abs() < 60) {
       text = diff.inMinutes.abs().toString() + '분 전';
     } else if (diff.inHours.abs() < 24) {
-      text = diff.inHours.abs().toString() + ' 시간 전';
+      text = diff.inHours.abs().toString() + '시간 전';
     } else if (diff.inDays.abs() < 3) {
       text = diff.inDays.abs().toString() + '일 전';
     } else {
@@ -52,5 +54,18 @@ class Util {
       text = formatter.format(createdDate);
     }
     return text;
+  }
+
+  // 00:00:00 시간 두개 비교
+  static String diffDateToDate(String? s, String? e) {
+    if (s == null || e == null) return '00시간 00분';
+    var endTime = e.split(":");
+    var startTime = s.split(":");
+    var eMillis = (int.parse(endTime[0]) * 3600 + int.parse(endTime[1]) * 60 + int.parse(endTime[2]));
+    var sMillis = (int.parse(startTime[0]) * 3600 + int.parse(startTime[1]) * 60 + int.parse(startTime[2]));
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    var h = (eMillis - sMillis)/3600;
+    var m = ((eMillis - sMillis)%3600)/60;
+    return "${twoDigits((h.toInt()))}시간 ${twoDigits(m.toInt())}분";
   }
 }

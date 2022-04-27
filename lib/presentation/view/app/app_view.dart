@@ -68,6 +68,7 @@ class AppView extends BaseView<AppViewModel> {
             children: [
               Obx(() {
                 if (controller.memberType.value == MemberType.BOSS) {
+
                   return const BossWorkplaceContainerView();
                 } else if (controller.memberType.value == MemberType.EMPLOYEE) {
                   return const EmployeeWorkplaceMainView();

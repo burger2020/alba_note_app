@@ -1,55 +1,39 @@
-import 'dart:convert';
-
 import 'package:albanote_project/config/repository_config.dart';
 import 'package:albanote_project/data/entity/common/response_entity.dart';
 import 'package:albanote_project/data/entity/login/member_token_info_dto.dart';
-import 'package:albanote_project/domain/repository/remote/common_repository.dart';
+import 'package:albanote_project/data/repository/base_repository.dart';
 import 'package:albanote_project/domain/repository/local/local_shared_preferences.dart';
+import 'package:albanote_project/domain/repository/remote/common_repository.dart';
 import 'package:dio/dio.dart';
 
 class CommonRepositoryImpl extends CommonRepository {
   CommonRepositoryImpl(Dio dio, LocalSharedPreferences localSP) : super(dio, localSP);
 
   @override
-  Future<ResponseEntity<bool>> postCheckAccessTokenValid() async {
-    const uri = '/common/checkValidAccessToken';
-    try {
-      var accessToken = await localSP.accessToken;
-      var response = await dio.post(
-        RepositoryConfig.serverUrl + uri,
-        options: Options(headers: {'Authorization': accessToken}),
-      );
-      if (response.statusCode == 200) {
-        var result = response.data as bool;
-        return ResponseEntity.success(result);
-      } else {
-        return onErrorHandler(response);
-      }
-    } on DioError catch (e) {
-      return onDioErrorHandler(e);
-    }
+  Future<ResponseEntity<String>> getCurrentServerTime() async {
+    const uri = RepositoryConfig.serverUrl + '/common/currentTime';
+    var accessToken = await localSP.accessToken;
+
+    return request<String, String>(
+      uri: uri,
+      method: HttpMethod.GET,
+      authorization: accessToken,
+      onSuccess: (data) => successDTO(data),
+      onError: (e) => e,
+    );
   }
 
   @override
-  Future<ResponseEntity<MemberTokenInfoDTO>> postRefreshToken() async {
-    const uri = '/common/refreshToken';
-    try {
-      final memberId = await localSP.memberId;
-      var response = await dio.post(
-        RepositoryConfig.serverUrl + uri,
-        data: {'memberId': memberId},
-        options: Options(headers: {'Authorization': await localSP.accessToken}),
-      );
+  Future<ResponseEntity<bool>> postCheckAccessTokenValid() async {
+    const uri = RepositoryConfig.serverUrl + '/common/checkValidAccessToken';
+    var accessToken = await localSP.accessToken;
 
-      /// if 부분 전체 다 상위 클래스에서 처리하면 될듯 ㅇㅇ
-      if (response.statusCode == 200) {
-        var result = MemberTokenInfoDTO.fromJson(jsonDecode(response.data));
-        return ResponseEntity.success(result);
-      } else {
-        return onErrorHandler(response);
-      }
-    } on DioError catch (e) {
-      return onDioErrorHandler(e);
-    }
+    return request<bool, bool>(
+      uri: uri,
+      method: HttpMethod.POST,
+      authorization: accessToken,
+      onSuccess: (data) => successDTO(data),
+      onError: (error) => error,
+    );
   }
 }

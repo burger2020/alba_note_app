@@ -157,7 +157,7 @@ class BossWorkplaceMainView extends BaseView<BossWorkplaceMainViewModel> {
 
   /// 현재 근무자
   Widget _buildCurrentWorkingEmployeeView(WorkRecordResponseDTO employee) {
-    var title = "${Util().convertTimeStampToHourNMinute(employee.officeGoingTime)} 출근";
+    var title = "${Util.convertTimeStampToHourNMinute(employee.officeGoingTime)} 출근";
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Container(

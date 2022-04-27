@@ -1,5 +1,4 @@
 import 'package:albanote_project/data/entity/response/workplace_of_boss/employee_member_simple_response_dto.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'workplace_request_simple_response_dto.freezed.dart';
@@ -31,6 +30,7 @@ class WorkplaceRequestSimpleResponseDTO with _$WorkplaceRequestSimpleResponseDTO
       String? createdDate,
       WorkplaceRequestType? requestType, //WorkplaceRequestType
       bool? isCompleted,
+      String? memo,
       EmployeeMemberSimpleResponseDTO? requestMember}) = _WorkplaceRequestSimpleResponseDTO;
 
   factory WorkplaceRequestSimpleResponseDTO.fromJson(Map<String, dynamic> json) =>
@@ -39,10 +39,10 @@ class WorkplaceRequestSimpleResponseDTO with _$WorkplaceRequestSimpleResponseDTO
 
 extension WorkplaceRequestSimpleResponseDTOExtension on WorkplaceRequestSimpleResponseDTO {
   // 요청 상태에 따른 문자
-  String getCompleteStatusText() {
+  static String getCompleteStatusText(bool? isCompleted) {
     return isCompleted == null
         ? '대기 요청'
-        : isCompleted!
+        : isCompleted
             ? '수락됨'
             : '거절됨';
   }

@@ -3,6 +3,7 @@ import 'package:albanote_project/domain/repository/remote/member_repository.dart
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 
+import '../config/repository_config.dart';
 import '../domain/repository/local/local_shared_preferences.dart';
 
 enum RootState { APP, LOGIN, SPLASH }
@@ -29,11 +30,25 @@ class RootController extends GetxController {
       var response = await _commonRepository.postCheckAccessTokenValid();
       response.when(success: (isValid) {
         _isAuth(isValid ? RootState.APP : RootState.LOGIN);
-        listenOnTokenRefresh();
+        if (isValid) {
+          listenOnTokenRefresh();
+          setServerTime();
+        }
       }, error: (e) {
         _isAuth(RootState.LOGIN);
       });
     }
+  }
+
+  /// 서버 시간 조회
+  void setServerTime() async {
+    var result = await _commonRepository.getCurrentServerTime();
+    result.when(
+        success: (data) {
+          var serverTime = DateTime.parse(data);
+          RepositoryConfig.serverTimeDiff = DateTime.now().difference(serverTime).inMilliseconds;
+        },
+        error: (e) {});
   }
 
   /// fcm 토큰 새로고침 스트림

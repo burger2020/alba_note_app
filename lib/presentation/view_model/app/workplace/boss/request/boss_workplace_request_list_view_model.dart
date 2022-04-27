@@ -46,9 +46,9 @@ class BossWorkplaceRequestViewModel extends BaseViewModel {
 
   /// 요청 상세화면 전환
   void startRequestDetailView(int requestId) {
-    Get.to(const BossWorkplaceRequestDetailView(), binding: BindingsBuilder((() {
-      BossWorkplaceRequestDetailViewModel(_workplaceOfBossRepository, requestId);
-    })));
+    Get.to(const BossWorkplaceRequestDetailView(),
+        binding: BindingsBuilder(
+            (() => {Get.put(BossWorkplaceRequestDetailViewModel(_workplaceOfBossRepository, requestId))})));
   }
 
   /// 필터 상태 변경

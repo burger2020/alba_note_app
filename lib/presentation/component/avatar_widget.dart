@@ -8,12 +8,14 @@ class AvatarWidget extends StatelessWidget {
     Key? key,
     required this.thumbPath,
     this.nickname,
-    required this.type,
+    this.textSize = 16,
+    this.type = AvatarType.type1,
     this.size = 65,
   }) : super(key: key);
 
   final String? thumbPath;
   final String? nickname;
+  final int textSize;
   final AvatarType type;
   final double size;
 
@@ -52,11 +54,12 @@ class AvatarWidget extends StatelessWidget {
     return Row(
       children: [
         type1Widget(),
+        const SizedBox(width: 10),
         Text(
           nickname ?? '',
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 16,
+            fontSize: textSize.toDouble(),
           ),
         )
       ],

@@ -4,6 +4,7 @@ import 'package:albanote_project/data/repository/login_repository_impl.dart';
 import 'package:albanote_project/data/repository/member_repository_impl.dart';
 import 'package:albanote_project/data/repository/workplace_repository_impl.dart';
 import 'package:albanote_project/domain/repository/local/local_shared_preferences.dart';
+import 'package:albanote_project/etc/util.dart';
 import 'package:albanote_project/presentation/view_model/app/app_view_model.dart';
 import 'package:albanote_project/presentation/view_model/app/workplace/boss/boss_workplace_view_model.dart';
 import 'package:albanote_project/presentation/view_model/login/login_page_view_model.dart';
@@ -34,6 +35,5 @@ class InitBinding extends Bindings {
     Get.lazyPut(() => LoginPageViewModel(loginRepository, localSharedPreferences, memberRepository));
 
     Get.lazyPut(() => BossWorkplaceMainViewModel(workplaceOfBossRepository, externalApiRepository));
-
   }
 }

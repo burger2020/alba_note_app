@@ -7,9 +7,9 @@ import 'package:dio/dio.dart';
 abstract class CommonRepository extends BaseRepository {
   CommonRepository(Dio dio, LocalSharedPreferences localSP) : super(dio, localSP);
 
+  /// 서버 시간 조회
+  Future<ResponseEntity<String>> getCurrentServerTime();
+
   /// accessToken 유효한지 확인
   Future<ResponseEntity<bool>> postCheckAccessTokenValid();
-
-  /// 토큰 새로고침
-  Future<ResponseEntity<MemberTokenInfoDTO>> postRefreshToken();
 }

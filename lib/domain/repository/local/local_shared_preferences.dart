@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:albanote_project/data/entity/common/response_entity.dart';
 import 'package:albanote_project/data/entity/login/member_login_response_dto.dart';
+import 'package:albanote_project/data/entity/login/member_token_info_dto.dart';
 import 'package:albanote_project/di/model/member/member_type.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,6 +37,11 @@ class LocalSharedPreferences {
     } else {
       return '';
     }
+  }
+
+
+  void updateMemberTokenInfo(MemberTokenInfoDTO tokenInfo){
+
   }
 
   /// 멤버 id 조회

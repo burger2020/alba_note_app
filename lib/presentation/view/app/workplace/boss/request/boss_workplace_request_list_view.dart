@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:albanote_project/data/entity/response/workplace_of_boss/workplace_request_simple_response_dto.dart';
 import 'package:albanote_project/etc/colors.dart';
 import 'package:albanote_project/etc/custom_class/base_view.dart';
+import 'package:albanote_project/etc/util.dart';
 import 'package:albanote_project/presentation/component/avatar_widget.dart';
 import 'package:albanote_project/presentation/view_model/app/workplace/boss/request/boss_workplace_request_list_view_model.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,7 @@ class BossWorkplaceRequestListView extends BaseView<BossWorkplaceRequestViewMode
         child: Container(
           decoration: const BoxDecoration(border: Border(top: BorderSide(color: Colors.black12))),
           child: Obx(
-            () => controller.pageRequest.value.isLoading
+            () => controller.pageRequest.value.isEmpty
                 ? const Center(child: Text('받은 요청이 없습니다.'))
                 : disallowIndicatorScrollView(
                     controller: controller.scrollController,
@@ -77,9 +78,8 @@ class BossWorkplaceRequestListView extends BaseView<BossWorkplaceRequestViewMode
   List<Widget> _buildAllRequest() {
     if (controller.workplaceRequests.isEmpty) return [];
     var requests = controller.workplaceRequests;
-    var dateFormat = DateFormat('yyyy. MM. dd EE');
 
-    var date = dateFormat.format(DateTime.parse(requests[0].createdDate ?? DateTime.now().toString()));
+    var date = Util.convertDateToYYYYMMDDEE(requests[0].createdDate);
     List<Widget> widgets = [_buildDateFormatWidget(date), _buildRequestItem(requests[0])];
 
     for (var i = 1; i < requests.length; i++) {
@@ -87,7 +87,7 @@ class BossWorkplaceRequestListView extends BaseView<BossWorkplaceRequestViewMode
       var after = DateTime.parse(requests[i].createdDate!);
       // 이전과 이후 요청 날짜 다를 경우 날찌 경계 추가
       if (before.year != after.year || before.month != after.month || before.day != after.day) {
-        widgets.add(_buildDateFormatWidget(dateFormat.format(after)));
+        widgets.add(_buildDateFormatWidget(Util.convertDateToYYYYMMDDEE(requests[i].createdDate!)));
       }
       widgets.add(_buildRequestItem(requests[i]));
     }
@@ -96,17 +96,9 @@ class BossWorkplaceRequestListView extends BaseView<BossWorkplaceRequestViewMode
 
   /// 날짜 구분 위젯
   Widget _buildDateFormatWidget(String date) {
-    var dateText = date
-        .replaceFirst('Mon', '월')
-        .replaceFirst('Tue', '화')
-        .replaceFirst('Wed', '수')
-        .replaceFirst('Thu', '목')
-        .replaceFirst('Fri', '금')
-        .replaceFirst('Sat', '토')
-        .replaceFirst('Sun', '일');
     return Padding(
       padding: const EdgeInsets.only(left: 20.0, right: 20, top: 30, bottom: 10),
-      child: Text(dateText, style: const TextStyle(fontSize: 13, color: Colors.grey)),
+      child: Text(date, style: const TextStyle(fontSize: 13, color: Colors.grey)),
     );
   }
 
@@ -114,26 +106,41 @@ class BossWorkplaceRequestListView extends BaseView<BossWorkplaceRequestViewMode
   Widget _buildRequestItem(WorkplaceRequestSimpleResponseDTO request) {
     var avatar = AvatarWidget(thumbPath: request.requestMember!.imageUrl, type: AvatarType.type1, size: 30);
     var nameAndRank = Text("${request.requestMember!.name ?? ''}(${request.requestMember!.rankName ?? ''})");
-    var requestStatus =
-        Text((request.requestType?.getRequestTypeText() ?? '') + ' - ' + request.getCompleteStatusText(),
-            style: TextStyle(
-                color: request.isCompleted == null
-                    ? Colors.black
-                    : request.isCompleted == true
-                        ? MyColors.primary.withAlpha(127)
-                        : Colors.black26));
+    var requestStatus = Text(
+        (request.requestType?.getRequestTypeText() ?? '') +
+            ' - ' +
+            WorkplaceRequestSimpleResponseDTOExtension.getCompleteStatusText(request.isCompleted),
+        style: TextStyle(
+            color: request.isCompleted == null
+                ? Colors.black
+                : request.isCompleted == true
+                    ? MyColors.primary.withAlpha(127)
+                    : Colors.black26));
 
     return GestureDetector(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Row(children: [
-            avatar,
-            const SizedBox(width: 10),
-            nameAndRank,
-          ]),
-          requestStatus
-        ]),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Row(children: [
+                avatar,
+                const SizedBox(width: 10),
+                nameAndRank,
+              ]),
+              requestStatus
+            ]),
+            request.memo != null
+                ? Container(
+                    constraints: BoxConstraints(maxWidth: Get.width / 2),
+                    padding: const EdgeInsets.only(top: 5),
+                    width: Get.width / 2,
+                    child: Text(request.memo!, style: const TextStyle(fontSize: 13, color: Colors.grey)),
+                    alignment: Alignment.topRight)
+                : Container()
+          ],
+        ),
       ),
 
       /// 요청 상세 화면

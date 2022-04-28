@@ -105,6 +105,7 @@ class WorkplaceOfBossRepositoryImpl extends WorkplaceOfBossRepository {
         onError: (error) => error);
   }
 
+  /// 일터 요청 메모 내용 변경
   @override
   Future<ResponseEntity<bool>> putChangRequestMemo(int requestId, String memo) async {
     const uri = _baseUri + '/changeRequestMemo';
@@ -114,6 +115,21 @@ class WorkplaceOfBossRepositoryImpl extends WorkplaceOfBossRepository {
         uri: uri,
         method: HttpMethod.PUT,
         body: {'requestId': requestId, 'memo': memo},
+        authorization: accessToken,
+        onSuccess: (data) => successDTO(data),
+        onError: (error) => error);
+  }
+
+  /// 요청 응답
+  @override
+  Future<ResponseEntity<bool>> putRequestResponse(int requestId, bool isComplete) async {
+    const uri = _baseUri + "/workplaceRequestResponse";
+    var accessToken = await localSP.accessToken;
+
+    return await request<bool, bool>(
+        uri: uri,
+        method: HttpMethod.PUT,
+        body: {'requestId': requestId, 'isComplete': isComplete},
         authorization: accessToken,
         onSuccess: (data) => successDTO(data),
         onError: (error) => error);

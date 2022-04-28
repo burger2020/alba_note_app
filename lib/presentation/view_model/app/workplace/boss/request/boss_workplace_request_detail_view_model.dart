@@ -36,6 +36,16 @@ class BossWorkplaceRequestDetailViewModel extends BaseViewModel {
     });
   }
 
+  /// 요청 응답
+  Future putRequestResponse(bool isComplete) async {
+    var result = await _workplaceOfBossRepository.putRequestResponse(requestDetail.value.requestId!, isComplete);
+    result.when(success: (data) {
+      requestDetail(requestDetail.value.copyWith(isComplete: isComplete));
+    }, error: (e) {
+      showSnackBarByMessage();
+    });
+  }
+
   // 메모 변경
   void onChangedMemo(String memo) {
     inputMemo.value = memo;
@@ -51,6 +61,6 @@ class BossWorkplaceRequestDetailViewModel extends BaseViewModel {
   }
 
   void backPress() {
-    Get.back(result: {'memo': inputMemo.value, 'requestId': requestId});
+    Get.back(result: {'memo': inputMemo.value, 'requestId': requestId, 'isComplete': requestDetail.value.isComplete});
   }
 }

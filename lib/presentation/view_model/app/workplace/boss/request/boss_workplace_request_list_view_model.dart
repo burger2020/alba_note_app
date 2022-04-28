@@ -56,7 +56,7 @@ class BossWorkplaceRequestViewModel extends BaseViewModel {
     var requests = workplaceRequests.value;
     for (var element in requests) {
       if (element.requestId == result['requestId']) {
-        requests[requests.indexOf(element)] = element.copyWith(memo: result['memo']);
+        requests[requests.indexOf(element)] = element.copyWith(memo: result['memo'], isCompleted: result['isComplete']);
       }
     }
     workplaceRequests(requests);

@@ -54,23 +54,27 @@ class BossWorkplaceMainView extends BaseView<BossWorkplaceMainViewModel> {
   /// 메뉴 아이콘 그리드뷰
   Widget _tabView() {
     var iconList = [
-      _buildMenuIconTab(Icons.check_box, Colors.deepPurple, "할 일 관리", () => controller.startTodoListView()),
-      _buildMenuIconTab(Icons.watch_later, Colors.deepPurple, "근무 관리", () => controller.startWorkHistoryListView()),
+      _buildMenuIconTab(Icons.check_box, const Color(0xff6579C1), "할 일 관리", () => controller.startTodoListView()),
       _buildMenuIconTab(
-          Icons.notification_important_rounded, Colors.deepPurple, "요청 관리", () => controller.startRequestListView()),
-      _buildMenuIconTab(Icons.settings, Colors.deepPurple, "일터 관리", () {}),
-      _buildMenuIconTab(Icons.people, Colors.deepPurple, "직원 관리", () {}),
-      _buildMenuIconTab(Icons.person, Colors.deepPurple, "프로필 관리", () {})
+          Icons.watch_later, const Color(0xffE36D78), "근무 관리", () => controller.startWorkHistoryListView()),
+      _buildMenuIconTab(Icons.notification_important_rounded, const Color(0xff2E85F9), "요청 관리",
+          () => controller.startRequestListView()),
+      _buildMenuIconTab(Icons.settings, const Color(0xff1FBCC3), "일터 관리", () {}),
+      _buildMenuIconTab(Icons.people, const Color(0xffC764D5), "직원 관리", () {}),
+      _buildMenuIconTab(Icons.person, const Color(0xff886DE5), "프로필 관리", () {})
     ];
-    return GridView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: iconList.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3, childAspectRatio: 1.4, mainAxisSpacing: 0, crossAxisSpacing: 0),
-      itemBuilder: (context, index) {
-        return iconList[index];
-      },
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: GridView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: iconList.length,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3, childAspectRatio: 1.3, mainAxisSpacing: 0, crossAxisSpacing: 0),
+        itemBuilder: (context, index) {
+          return iconList[index];
+        },
+      ),
     );
   }
 
@@ -110,7 +114,8 @@ class BossWorkplaceMainView extends BaseView<BossWorkplaceMainViewModel> {
       const SizedBox(height: 10),
       list.isEmpty
           ? Container(
-              padding: const EdgeInsets.only(top: 10), child: Text(emptyText, style: const TextStyle(color: Colors.grey)))
+              padding: const EdgeInsets.only(top: 10),
+              child: Text(emptyText, style: const TextStyle(color: Colors.grey)))
           : SizedBox(
               width: double.infinity,
               child: disallowIndicatorScrollView(

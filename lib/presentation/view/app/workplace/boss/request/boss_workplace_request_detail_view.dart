@@ -25,9 +25,7 @@ class BossWorkplaceRequestDetailView extends BaseView<BossWorkplaceRequestDetail
       child: progressWidget(
         child: Scaffold(
           backgroundColor: Colors.white,
-          appBar: buildBaseAppBar(
-              title: "요청 상세",
-              onBackPress: () => controller.backPress()),
+          appBar: buildBaseAppBar(title: "요청 상세", onBackPress: () => controller.backPress()),
           body: disallowIndicatorScrollView(
             child: Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -101,11 +99,11 @@ class BossWorkplaceRequestDetailView extends BaseView<BossWorkplaceRequestDetail
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     Flexible(
-                                      child: Text(
-                                          controller.requestDetail.value.memo ?? '메모를 남겨보세요.',
+                                      child: Text(controller.requestDetail.value.memo ?? '메모를 남겨보세요.',
                                           style: TextStyle(
-                                            color:
-                                                controller.requestDetail.value.memo != null ? Colors.black : Colors.grey,
+                                            color: controller.requestDetail.value.memo != null
+                                                ? Colors.black
+                                                : Colors.grey,
                                           )),
                                     ),
                                     const SizedBox(width: 5),
@@ -182,9 +180,32 @@ class BossWorkplaceRequestDetailView extends BaseView<BossWorkplaceRequestDetail
                             )
                           ],
                         ),
-                        const SizedBox(height: 50)
-
-                        //todo 대기 요청이면 하단에 수락 버튼 후 서버 반영 ㄲㄲㄲ
+                        controller.requestDetail.value.isComplete != null
+                            ? const SizedBox(height: 50)
+                            : Column(
+                                children: [
+                                  const SizedBox(height: 50),
+                                  buildBottomButton(
+                                      text: "요청 수락하기",
+                                      isEnable: true,
+                                      negativeButtonText: "요청 거절하기",
+                                      onPositiveTab: () {
+                                        showAlertDialog(
+                                            title: '요청 수락',
+                                            content: '요청을 수락하면 수정할 수 없어요.\n수락 하시겠어요?',
+                                            positiveButtonText: '수락',
+                                            setOnPositiveListener: () => controller.putRequestResponse(true));
+                                      },
+                                      onNegativeTab: () {
+                                        showAlertDialog(
+                                            title: '요청 거절',
+                                            content: '요청을 거절하면 수정할 수 없어요.\n거절 하시겠어요?',
+                                            positiveButtonText: '거절',
+                                            positiveButtonColor: Colors.red,
+                                            setOnPositiveListener: () => controller.putRequestResponse(false));
+                                      })
+                                ],
+                              )
                       ],
                     );
                   },

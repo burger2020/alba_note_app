@@ -21,9 +21,13 @@ abstract class WorkplaceOfBossRepository extends BaseRepository {
   /// 일터 요청 리스트 조회
   Future<ResponseEntity<List<WorkplaceRequestSimpleResponseDTO>>> getWorkplaceRequestList(
       int workplaceId, PageRequestModel pageRequest, bool isIncomplete);
+
   /// 일터 요청 상세 조회
   Future<ResponseEntity<WorkplaceRequestDetailResponseDTO>> getWorkplaceRequestDetail(int requestId);
 
   /// 일터 생성
   Future<ResponseEntity<int>> postCreateWorkplace(CreateWorkplaceRequestDTO dto);
+
+  /// 일터 요청 메모 내용 변경
+  Future<ResponseEntity<bool>> putChangRequestMemo(int requestId, String memo);
 }

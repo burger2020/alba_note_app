@@ -9,6 +9,7 @@ import 'package:albanote_project/presentation/component/avatar_widget.dart';
 import 'package:albanote_project/presentation/view_model/app/workplace/boss/request/boss_workplace_request_detail_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 /// 요청 상세 화면
 class BossWorkplaceRequestDetailView extends BaseView<BossWorkplaceRequestDetailViewModel> {
@@ -16,151 +17,178 @@ class BossWorkplaceRequestDetailView extends BaseView<BossWorkplaceRequestDetail
 
   @override
   Widget build(BuildContext context) {
-    return progressWidget(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: buildBaseAppBar(title: "요청 상세"),
-        body: disallowIndicatorScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Obx(() {
-              var request = controller.requestDetail.value;
+    return WillPopScope(
+      onWillPop: () async {
+        controller.backPress();
+        return true;
+      },
+      child: progressWidget(
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          appBar: buildBaseAppBar(
+              title: "요청 상세",
+              onBackPress: () => controller.backPress()),
+          body: disallowIndicatorScrollView(
+            child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Obx(
+                  () {
+                    var request = controller.requestDetail.value;
 
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  /// 프로필 및 요청 시간
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      AvatarWidget(
-                        thumbPath: request.requestMember?.imageUrl,
-                        size: 30,
-                        type: AvatarType.type3,
-                        nickname: request.requestMember?.getNameNRankName(),
-                        textSize: 14,
-                      ),
-                      Text(
-                        Util.convertDateToAgoTime(request.createdDate),
-                        style: const TextStyle(fontSize: 12, color: Colors.grey),
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-
-                  /// 요청 제목
-                  _buildRequestTitle(),
-                  const SizedBox(height: 30),
-
-                  /// 요청 내용
-                  Text(request.requestContent ?? ''),
-                  const SizedBox(height: 30),
-                  Container(width: Get.width, height: 1, color: Colors.black12),
-                  const SizedBox(height: 30),
-
-                  /// 근무 내역
-                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                    const Text('근무 날짜', style: TextStyle(fontWeight: FontWeight.bold)),
-                    Text(Util.convertDateToYYYYMMDDEE(request.requestWorkDate)),
-                  ]),
-                  const SizedBox(height: 30),
-
-                  /// 요청 타입별 출퇴근 요청 시간
-                  _buildRequestCommuteTime(request),
-                  const SizedBox(height: 30),
-                  _buildWorkTimeInfo(request),
-                  const SizedBox(height: 30),
-                  Container(width: Get.width, height: 1, color: Colors.black12),
-                  const SizedBox(height: 30),
-
-                  /// 메모
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('메모', style: TextStyle(fontWeight: FontWeight.bold)),
-                      GestureDetector(
-                        child: Container(
-                          constraints: BoxConstraints(maxWidth: Get.width / 2),
-                          alignment: Alignment.topRight,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(
-                                request.memo ?? '메모를 남겨보세요.',
-                                style: TextStyle(color: request.memo != null ? Colors.black : Colors.grey),
-                              ),
-                              const SizedBox(width: 5),
-                              const Icon(
-                                Icons.arrow_forward_ios_rounded,
-                                size: 15,
-                                color: Colors.grey,
-                              )
-                            ],
-                          ),
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        /// 프로필 및 요청 시간
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            AvatarWidget(
+                              thumbPath: request.requestMember?.imageUrl,
+                              size: 30,
+                              type: AvatarType.type3,
+                              nickname: request.requestMember?.getNameNRankName(),
+                              textSize: 14,
+                            ),
+                            Text(
+                              Util.convertDateToAgoTime(request.createdDate),
+                              style: const TextStyle(fontSize: 12, color: Colors.grey),
+                            )
+                          ],
                         ),
-                        onTap: () {
-                          showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  // RoundedRectangleBorder - Dialog 화면 모서리 둥글게 조절
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                                  //Dialog Main Title
-                                  title: const Center(
-                                      child: Text('직원들이 볼 수 없는 메모에요.',
-                                          style: TextStyle(color: Colors.grey, fontSize: 13))),
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.only(top: 10),
-                                        width: Get.width,
-                                        constraints: const BoxConstraints(maxHeight: 150),
-                                        child: TextField(
-                                          keyboardType: TextInputType.multiline,
-                                          maxLength: 50,
-                                          minLines: 1,
-                                          maxLines: 10,
-                                          style: const TextStyle(fontSize: 14),
-                                          decoration: const InputDecoration(
-                                            isCollapsed: true,
-                                            hintText: '메모를 입력하세요.',
-                                            contentPadding: EdgeInsets.only(bottom: 10),
-                                            hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
-                                          ),
-                                          onChanged: (text) {
-                                            //todo 초기 텍스트 controller 연결해서 값 넣기 ㄲ
-                                          },
-                                        ),
-                                      ),
-                                      const SizedBox(height: 10)
-                                    ],
-                                  ),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: const Text('취소', style: TextStyle(color: Colors.grey)),
-                                      onPressed: () {
-                                        Get.back();
-                                      },
+                        const SizedBox(height: 30),
+
+                        /// 요청 제목
+                        _buildRequestTitle(),
+                        const SizedBox(height: 30),
+
+                        /// 요청 내용
+                        Text(request.requestContent ?? ''),
+                        const SizedBox(height: 30),
+                        Container(width: Get.width, height: 1, color: Colors.black12),
+                        const SizedBox(height: 30),
+
+                        /// 근무 내역
+                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                          const Text('근무 날짜', style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text(Util.convertDateToYYYYMMDDEE(request.requestWorkDate)),
+                        ]),
+                        const SizedBox(height: 30),
+
+                        /// 요청 타입별 출퇴근 요청 시간
+                        request.requestType == WorkplaceRequestType.COMMUTE_REGISTRATION
+                            ? _buildCommuteRegistrationWidget(request)
+                            : Column(children: [
+                                _buildCommuteCorrectionWidget(request),
+                                const SizedBox(height: 30),
+                                _buildCommuteRegistrationWidget(request),
+                              ]),
+                        const SizedBox(height: 30),
+                        Container(width: Get.width, height: 1, color: Colors.black12),
+                        const SizedBox(height: 30),
+
+                        /// 메모
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('메모', style: TextStyle(fontWeight: FontWeight.bold)),
+                            GestureDetector(
+                              child: Container(
+                                constraints: BoxConstraints(maxWidth: Get.width / 3 * 2),
+                                alignment: Alignment.topRight,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Flexible(
+                                      child: Text(
+                                          controller.requestDetail.value.memo ?? '메모를 남겨보세요.',
+                                          style: TextStyle(
+                                            color:
+                                                controller.requestDetail.value.memo != null ? Colors.black : Colors.grey,
+                                          )),
                                     ),
-                                    TextButton(
-                                      child: const Text('왼료', style: TextStyle(color: MyColors.primary)),
-                                      onPressed: () {
-                                        Get.back();
-                                      },
-                                    ),
+                                    const SizedBox(width: 5),
+                                    const Icon(
+                                      Icons.arrow_forward_ios_rounded,
+                                      size: 15,
+                                      color: Colors.grey,
+                                    )
                                   ],
-                                );
-                              });
-                        },
-                      )
-                    ],
-                  )
-                ],
-              );
-            }),
+                                ),
+                              ),
+
+                              /// 클릭 시 메모 다이얼로그
+                              onTap: () {
+                                showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        // RoundedRectangleBorder - Dialog 화면 모서리 둥글게 조절
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                                        //Dialog Main Title
+                                        title: const Center(
+                                            child: Text('직원들이 볼 수 없는 메모에요.',
+                                                style: TextStyle(color: Colors.grey, fontSize: 13))),
+                                        content: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          children: [
+                                            Container(
+                                              padding: const EdgeInsets.only(top: 10),
+                                              width: Get.width,
+                                              constraints: const BoxConstraints(maxHeight: 150),
+                                              child: TextField(
+                                                keyboardType: TextInputType.multiline,
+                                                maxLength: 50,
+                                                minLines: 1,
+                                                controller: controller.memoController,
+                                                maxLines: 10,
+                                                style: const TextStyle(fontSize: 14),
+                                                decoration: const InputDecoration(
+                                                  isCollapsed: true,
+                                                  hintText: '메모를 입력하세요.',
+                                                  contentPadding: EdgeInsets.only(bottom: 10),
+                                                  hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+                                                ),
+                                                onChanged: (text) {
+                                                  controller.onChangedMemo(text); // 메모 변경
+                                                },
+                                              ),
+                                            ),
+                                            const SizedBox(height: 10)
+                                          ],
+                                        ),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: const Text('취소', style: TextStyle(color: Colors.grey)),
+                                            onPressed: () {
+                                              controller.onChangedMemo(controller.requestDetail.value.memo ?? '');
+                                              Get.back();
+                                            },
+                                          ),
+                                          TextButton(
+                                            child: const Text('왼료', style: TextStyle(color: MyColors.primary)),
+                                            onPressed: () {
+                                              controller.setMemoText();
+                                              Get.back();
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    });
+                              },
+                            )
+                          ],
+                        ),
+                        const SizedBox(height: 50)
+
+                        //todo 대기 요청이면 하단에 수락 버튼 후 서버 반영 ㄲㄲㄲ
+                      ],
+                    );
+                  },
+                )),
           ),
         ),
       ),
@@ -184,74 +212,150 @@ class BossWorkplaceRequestDetailView extends BaseView<BossWorkplaceRequestDetail
     );
   }
 
-  /// 요청 타입별 출퇴근 요청 시간
-  Widget _buildRequestCommuteTime(WorkplaceRequestDetailResponseDTO request) {
+  /// 요청 위젯 생성
+  Widget _buildCommuteRegistrationWidget(WorkplaceRequestDetailResponseDTO request) {
     var style = const TextStyle(fontSize: 14, color: Colors.black);
     var requestOfficeGoingTime = Util.convertTimeStampToHourNMinute(request.requestOfficeGoingTime, short: true);
     var requestQuittingTime = Util.convertTimeStampToHourNMinute(request.requestQuittingTime, short: true);
-    switch (request.requestType) {
-      case WorkplaceRequestType.COMMUTE_REGISTRATION:
-        return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+    return Column(
+      children: [
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text('요청 출퇴근 시간', style: style.copyWith(fontWeight: FontWeight.bold)),
-          Text(
-            requestOfficeGoingTime + ' ~ ' + requestQuittingTime,
-            style: style,
-          )
-        ]);
-      case WorkplaceRequestType.COMMUTE_CORRECTION:
-        var existingOfficeGoingTime = Util.convertTimeStampToHourNMinute(request.existingOfficeGoingTime, short: true);
-        var existingQuittingTime = Util.convertTimeStampToHourNMinute(request.existingQuittingTime, short: true);
-        return Column(
-          children: [
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text('기존 출퇴근 시간', style: style.copyWith(fontWeight: FontWeight.bold)),
-              Text(existingOfficeGoingTime + ' ~ ' + existingQuittingTime, style: style)
-            ]),
-            const SizedBox(height: 30),
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text('변경 출퇴근 시간', style: style.copyWith(fontWeight: FontWeight.bold)),
-              Text(requestOfficeGoingTime + ' ~ ' + requestQuittingTime, style: style),
-            ]),
-          ],
-        );
-      default:
-        return Container();
-    }
-  }
-
-  /// 근무 시간 정보
-  Widget _buildWorkTimeInfo(WorkplaceRequestDetailResponseDTO request) {
-    switch (request.requestType) {
-      case WorkplaceRequestType.COMMUTE_REGISTRATION:
-        return Row(
+          Text(requestOfficeGoingTime + ' ~ ' + requestQuittingTime, style: style)
+        ]),
+        const SizedBox(height: 20),
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text("총 근무 시간", style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(Util.diffDateToDate(request.requestOfficeGoingTime, request.requestQuittingTime)),
+            const Text("요청 근무 시간", style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(Util.diffTimeToTime(request.requestOfficeGoingTime, request.requestQuittingTime,
+                request.requestBreakTime, request.requestNightBreakTime)),
           ],
-        );
-      case WorkplaceRequestType.COMMUTE_CORRECTION:
-        return Column(
+        ),
+        _buildRequestWorkRecord(request)
+      ],
+    );
+  }
+
+  /// 요청 근무 기록
+  Widget _buildRequestWorkRecord(WorkplaceRequestDetailResponseDTO request) {
+    return Column(
+      children: [
+        request.employeeRankInfo?.isHolidayAllowance == true
+            ? _buildAllowanceInfo(AllowanceType.HOLIDAY, request.requestOfficeGoingTime, request.requestOfficeGoingTime,
+                request.requestBreakTime, request.requestNightBreakTime)
+            : Container(),
+        request.employeeRankInfo?.isNightAllowance == true
+            ? _buildAllowanceInfo(AllowanceType.NIGHT, request.requestOfficeGoingTime, request.requestOfficeGoingTime,
+                request.requestBreakTime, request.requestNightBreakTime)
+            : Container(),
+        request.employeeRankInfo?.isOvertimeAllowance == true
+            ? _buildAllowanceInfo(AllowanceType.OVER, request.requestOfficeGoingTime, request.requestOfficeGoingTime,
+                request.requestBreakTime, request.requestNightBreakTime)
+            : Container(),
+        request.requestBreakTime != null
+            ? _buildAllowanceInfo(AllowanceType.BREAK, '00:00:00', request.requestBreakTime, null, null)
+            : Container(),
+        request.requestNightBreakTime != null
+            ? _buildAllowanceInfo(AllowanceType.NIGHT_BREAK, '00:00:00', request.requestNightBreakTime, null, null)
+            : Container(),
+        const SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text("기존 근무 시간", style: TextStyle(fontWeight: FontWeight.bold)),
-                Text(Util.diffDateToDate(request.existingOfficeGoingTime, request.existingQuittingTime)),
-              ],
-            ),
-            const SizedBox(height: 30),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text("변경 근무 시간", style: TextStyle(fontWeight: FontWeight.bold)),
-                Text(Util.diffDateToDate(request.requestOfficeGoingTime, request.requestQuittingTime)),
-              ],
-            )
+            const Text("요청한 총 급여", style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(NumberFormat('###,###,###,###원').format(request.requestTotalSalary ?? 0)),
           ],
-        );
-      default:
-        return Container();
+        ),
+      ],
+    );
+  }
+
+  /// 출퇴근 수정 위젯
+  Widget _buildCommuteCorrectionWidget(WorkplaceRequestDetailResponseDTO request) {
+    var style = const TextStyle(fontSize: 14, color: Colors.black);
+    var existingOfficeGoingTime = Util.convertTimeStampToHourNMinute(request.existingOfficeGoingTime, short: true);
+    var existingQuittingTime = Util.convertTimeStampToHourNMinute(request.existingQuittingTime, short: true);
+    return Column(
+      children: [
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Text('기존 출퇴근 시간', style: style.copyWith(fontWeight: FontWeight.bold)),
+          Text(existingOfficeGoingTime + ' ~ ' + existingQuittingTime, style: style)
+        ]),
+        const SizedBox(height: 30),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text("기존 근무 시간", style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(Util.diffTimeToTime(request.existingOfficeGoingTime, request.existingQuittingTime,
+                request.existingBreakTime, request.existingNightBreakTime)),
+          ],
+        ),
+        _buildExistingWorkRecord(request)
+      ],
+    );
+  }
+
+  /// 기존 근무 기록
+  Widget _buildExistingWorkRecord(WorkplaceRequestDetailResponseDTO request) {
+    return Column(
+      children: [
+        request.employeeRankInfo?.isHolidayAllowance == true
+            ? _buildAllowanceInfo(AllowanceType.HOLIDAY, request.existingOfficeGoingTime, request.existingQuittingTime,
+                request.existingBreakTime, request.existingNightBreakTime)
+            : Container(),
+        request.employeeRankInfo?.isNightAllowance == true
+            ? _buildAllowanceInfo(AllowanceType.NIGHT, request.existingOfficeGoingTime, request.existingQuittingTime,
+                request.existingBreakTime, request.existingNightBreakTime)
+            : Container(),
+        request.employeeRankInfo?.isOvertimeAllowance == true
+            ? _buildAllowanceInfo(AllowanceType.OVER, request.existingOfficeGoingTime, request.existingQuittingTime,
+                request.existingBreakTime, request.existingNightBreakTime)
+            : Container(),
+        request.existingBreakTime != null
+            ? _buildAllowanceInfo(AllowanceType.BREAK, '00:00:00', request.existingBreakTime, null, null)
+            : Container(),
+        request.existingBreakTime != null
+            ? _buildAllowanceInfo(AllowanceType.NIGHT_BREAK, '00:00:00', request.existingNightBreakTime, null, null)
+            : Container(),
+        const SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text("기존 총 급여", style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(NumberFormat('###,###,###,###원').format(request.existingTotalSalary ?? 0)),
+          ],
+        ),
+      ],
+    );
+  }
+
+  /// 근무 수당 시간 정보
+  Widget _buildAllowanceInfo(AllowanceType type, String? s, String? e, String? b, String? nb) {
+    var typeName = "휴일 근무 시간";
+    var workedTime = Util.diffTimeToTime(s, e, b, nb, type: type);
+    if (workedTime == '00시간 00분') return Container();
+    if (type == AllowanceType.OVER) {
+      typeName = "초과 근무 시간";
+    } else if (type == AllowanceType.NIGHT) {
+      typeName = "야간 근무 시간";
+    } else if (type == AllowanceType.BREAK) {
+      typeName = '휴게 시간';
+    } else if (type == AllowanceType.NIGHT_BREAK) {
+      typeName = '야간 휴게 시간';
     }
+
+    var style = const TextStyle(fontSize: 12, color: Colors.black54);
+    return Column(
+      children: [
+        const SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [Text(typeName, style: style), Text(workedTime, style: style)],
+        ),
+      ],
+    );
   }
 }
+
+enum AllowanceType { NIGHT, OVER, HOLIDAY, NORMAL, BREAK, NIGHT_BREAK }

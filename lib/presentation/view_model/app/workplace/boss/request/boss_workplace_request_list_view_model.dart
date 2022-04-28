@@ -33,6 +33,7 @@ class BossWorkplaceRequestViewModel extends BaseViewModel {
     var response = await _workplaceOfBossRepository.getWorkplaceRequestList(
         workplaceId, pageRequest.value, isOnlyIncomplete.value);
     response.when(success: (data) {
+      data.sort((a, b) => a.requestId!.compareTo(b.requestId!));
       data.sort((a, b) => b.createdDate!.compareTo(a.createdDate!));
       workplaceRequests.addAll(data);
       pageRequest.value.setResult(data);
@@ -45,10 +46,21 @@ class BossWorkplaceRequestViewModel extends BaseViewModel {
   }
 
   /// 요청 상세화면 전환
-  void startRequestDetailView(int requestId) {
-    Get.to(const BossWorkplaceRequestDetailView(),
+  void startRequestDetailView(int requestId) async {
+    var result = await Get.to(const BossWorkplaceRequestDetailView(),
         binding: BindingsBuilder(
             (() => {Get.put(BossWorkplaceRequestDetailViewModel(_workplaceOfBossRepository, requestId))})));
+
+    var memo = (result as Map<String, dynamic>)['memo'].toString();
+    if (memo.isBlank == true) return;
+    var requests = workplaceRequests.value;
+    for (var element in requests) {
+      if (element.requestId == result['requestId']) {
+        requests[requests.indexOf(element)] = element.copyWith(memo: result['memo']);
+      }
+    }
+    workplaceRequests(requests);
+    workplaceRequests.refresh();
   }
 
   /// 필터 상태 변경

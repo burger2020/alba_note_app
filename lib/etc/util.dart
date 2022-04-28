@@ -1,4 +1,5 @@
 import 'package:albanote_project/config/repository_config.dart';
+import 'package:albanote_project/presentation/view/app/workplace/boss/request/boss_workplace_request_detail_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
@@ -57,15 +58,56 @@ class Util {
   }
 
   // 00:00:00 시간 두개 비교
-  static String diffDateToDate(String? s, String? e) {
+  static String diffTimeToTime(String? s, String? e, String? b, String? nb,
+      {type = AllowanceType.NORMAL, bool short = false}) {
     if (s == null || e == null) return '00시간 00분';
     var endTime = e.split(":");
     var startTime = s.split(":");
-    var eMillis = (int.parse(endTime[0]) * 3600 + int.parse(endTime[1]) * 60 + int.parse(endTime[2]));
-    var sMillis = (int.parse(startTime[0]) * 3600 + int.parse(startTime[1]) * 60 + int.parse(startTime[2]));
     String twoDigits(int n) => n.toString().padLeft(2, "0");
-    var h = (eMillis - sMillis)/3600;
-    var m = ((eMillis - sMillis)%3600)/60;
+    var eSec = (int.parse(endTime[0]) * 3600 + int.parse(endTime[1]) * 60 + int.parse(endTime[2]));
+    // 야간 근무 시간 계산
+    if (type == AllowanceType.NIGHT) {
+      if (eSec < (3600 * 22)) {
+        return "${twoDigits(0)}시간 ${twoDigits(0)}분";
+      } else {
+        startTime = '10:00:00'.split(":");
+      }
+    }
+    var sSec = (int.parse(startTime[0]) * 3600 + int.parse(startTime[1]) * 60 + int.parse(startTime[2]));
+    if (eSec < sSec) {
+      // 종료시간이 시작시간보다 적을경우(24시 넘어서까지 근무) 24시간 추가
+      eSec += (3600 * 24);
+    }
+    var h = (eSec - sSec) / 3600;
+    var m = ((eSec - sSec) % 3600) / 60;
+    // 초과 근무일 시 8시간 이하면 0시간 8시간 이상이면 -8시간 후 계산
+    if (type == AllowanceType.OVER) {
+      if ((eSec - sSec) < (3600 * 8)) {
+        return "${twoDigits(0)}시간 ${twoDigits(0)}분";
+      } else {
+        h -= 8;
+      }
+    }
     return "${twoDigits((h.toInt()))}시간 ${twoDigits(m.toInt())}분";
+  }
+
+  // 급여 계산
+  static void calcTotalSalary(
+    String? s, // 시작 시간
+    String? e, // 종료 시간
+    bool isOver, // 초과 근무 해당 여부
+    bool isNight, // 야간 수당 해당 여부
+    bool isHoliday, // 휴일 수당 해당 여부
+    String workedDate, // 근무 날짜
+    int hourlyWage, // 시급
+    int hourlyWageCalculationUnit, // 시급 계산 단위
+    int? breakTime,
+    int? nightBreakTime,
+  ) {
+    var totalWorkedTime = diffTimeToTime(s, e, null, null, type: AllowanceType.NORMAL, short: true);
+    var nightWorkedTime = diffTimeToTime(s, e, null, null, type: AllowanceType.NIGHT, short: true);
+    var overWorkedTime = diffTimeToTime(s, e, null, null, type: AllowanceType.OVER, short: true);
+    var holidayWorkedTime = diffTimeToTime(s, e, null, null, type: AllowanceType.HOLIDAY, short: true);
+
   }
 }

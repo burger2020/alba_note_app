@@ -2,7 +2,6 @@ import 'package:albanote_project/controller/root_controller.dart';
 import 'package:albanote_project/di/model/member/social_login_type.dart';
 import 'package:albanote_project/etc/custom_class/base_view.dart';
 import 'package:albanote_project/presentation/view_model/login/login_page_view_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';

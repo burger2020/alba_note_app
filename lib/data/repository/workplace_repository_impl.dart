@@ -46,9 +46,11 @@ class WorkplaceOfBossRepositoryImpl extends WorkplaceOfBossRepository {
 
   /// 일터 요청 리스트 조회
   @override
-  Future<ResponseEntity<List<WorkplaceRequestSimpleResponseDTO>>> getWorkplaceRequestList(int workplaceId,
-      PageRequestModel pageRequest,
-      bool isIncomplete,) async {
+  Future<ResponseEntity<List<WorkplaceRequestSimpleResponseDTO>>> getWorkplaceRequestList(
+    int workplaceId,
+    PageRequestModel pageRequest,
+    bool isIncomplete,
+  ) async {
     const uri = _baseUri + '/requestList';
     var accessToken = await localSP.accessToken;
 
@@ -59,7 +61,7 @@ class WorkplaceOfBossRepositoryImpl extends WorkplaceOfBossRepository {
       authorization: accessToken,
       onSuccess: (data) {
         var dto =
-        List<Map<String, dynamic>>.from(data).map((e) => WorkplaceRequestSimpleResponseDTO.fromJson(e)).toList();
+            List<Map<String, dynamic>>.from(data).map((e) => WorkplaceRequestSimpleResponseDTO.fromJson(e)).toList();
         return successDTO(dto);
       },
       onError: (error) => error,
@@ -98,6 +100,20 @@ class WorkplaceOfBossRepositoryImpl extends WorkplaceOfBossRepository {
         uri: uri,
         method: HttpMethod.POST,
         body: jsonEncode(dto.copyWith(bossMemberId: memberId).toJson()),
+        authorization: accessToken,
+        onSuccess: (data) => successDTO(data),
+        onError: (error) => error);
+  }
+
+  @override
+  Future<ResponseEntity<bool>> putChangRequestMemo(int requestId, String memo) async {
+    const uri = _baseUri + '/changeRequestMemo';
+    var accessToken = await localSP.accessToken;
+
+    return await request<bool, bool>(
+        uri: uri,
+        method: HttpMethod.PUT,
+        body: {'requestId': requestId, 'memo': memo},
         authorization: accessToken,
         onSuccess: (data) => successDTO(data),
         onError: (error) => error);

@@ -20,6 +20,9 @@ class BossWorkplaceRequestViewModel extends BaseViewModel {
   Rx<PageRequestModel> pageRequest = PageRequestModel().obs;
   RxList<WorkplaceRequestSimpleResponseDTO> workplaceRequests = RxList<WorkplaceRequestSimpleResponseDTO>();
 
+  // 완료된 목록
+  var completedList = <int>[];
+
   @override
   void onInit() {
     super.onInit();
@@ -46,17 +49,20 @@ class BossWorkplaceRequestViewModel extends BaseViewModel {
   }
 
   /// 요청 상세화면 전환
-  void startRequestDetailView(int requestId) async {
+  void startRequestDetailView(int id) async {
     var result = await Get.to(const BossWorkplaceRequestDetailView(),
         binding: BindingsBuilder(
-            (() => {Get.put(BossWorkplaceRequestDetailViewModel(_workplaceOfBossRepository, requestId))})));
+            (() => {Get.put(BossWorkplaceRequestDetailViewModel(_workplaceOfBossRepository, id))})));
 
     var memo = (result as Map<String, dynamic>)['memo'].toString();
     if (memo.isBlank == true) return;
     var requests = workplaceRequests.value;
+    var requestId = result['requestId'];
     for (var element in requests) {
-      if (element.requestId == result['requestId']) {
-        requests[requests.indexOf(element)] = element.copyWith(memo: result['memo'], isCompleted: result['isComplete']);
+      if (element.requestId == requestId) {
+        var isComplete = result['isComplete'];
+        if (isComplete != null) completedList.add(requestId);
+        requests[requests.indexOf(element)] = element.copyWith(memo: result['memo'], isCompleted: isComplete);
       }
     }
     workplaceRequests(requests);
@@ -75,5 +81,9 @@ class BossWorkplaceRequestViewModel extends BaseViewModel {
     pageRequest.value.setRefresh();
     workplaceRequests.clear();
     getWorkplaceRequestList();
+  }
+
+  void backPress() {
+    Get.back(result: {'completeList': completedList});
   }
 }

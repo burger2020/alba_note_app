@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:albanote_project/config/repository_config.dart';
 import 'package:albanote_project/data/entity/common/response_entity.dart';
 import 'package:albanote_project/data/entity/request/workplace_of_boss/create_workplace_request_dto.dart';
+import 'package:albanote_project/data/entity/response/workplace_of_boss/work_record_response_dto.dart';
 import 'package:albanote_project/data/entity/response/workplace_of_boss/workplace_info_of_boss_response_dto.dart';
 import 'package:albanote_project/data/entity/response/workplace_of_boss/workplace_request_detail_response_dto.dart';
 import 'package:albanote_project/data/entity/response/workplace_of_boss/workplace_request_simple_response_dto.dart';
@@ -85,6 +86,28 @@ class WorkplaceOfBossRepositoryImpl extends WorkplaceOfBossRepository {
       },
       onError: (error) => error,
     );
+  }
+
+  /// 일터 날짜별 근무 기록 조회
+  @override
+  Future<ResponseEntity<List<WorkRecordResponseDTO>>> getWorkRecordsByDate(
+    int workplaceId,
+    DateTime searchDate,
+    PageRequestModel pageRequest,
+  ) async {
+    const uri = _baseUri + '/workRecordsByDate';
+    var accessToken = await localSP.accessToken;
+
+    return await request<List<Map<String, dynamic>>, List<WorkRecordResponseDTO>>(
+        uri: uri,
+        method: HttpMethod.GET,
+        authorization: accessToken,
+        queryParameter: {'workplaceId': workplaceId, 'date': '2022-04-29'},
+        onSuccess: (data) {
+          var dto = List<Map<String, dynamic>>.from(data).map((e) => WorkRecordResponseDTO.fromJson(e)).toList();
+          return successDTO(dto);
+        },
+        onError: (e) => e);
   }
 
   /// ************************ post ********************/

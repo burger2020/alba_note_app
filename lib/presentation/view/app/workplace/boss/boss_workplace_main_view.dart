@@ -16,9 +16,9 @@ class BossWorkplaceMainView extends BaseView<BossWorkplaceMainViewModel> {
     return Obx(() => SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(height: 30),
+              const SizedBox(height: 40),
               _tabView(),
-              const SizedBox(height: 30),
+              const SizedBox(height: 40),
               // 새로운 요청
               _buildSectionCommonWidget(
                   title: "새로운 요청 ${controller.workplace.value.workplaceRequest?.length ?? 0}개",
@@ -26,7 +26,7 @@ class BossWorkplaceMainView extends BaseView<BossWorkplaceMainViewModel> {
                       (index) => _buildRequestView(controller.workplace.value.workplaceRequest![index])),
                   emptyText: '새로운 요청이 없어요.',
                   allView: () => controller.startRequestListView()),
-              const SizedBox(height: 40),
+              const SizedBox(height: 60),
               // 현재 근무자
               _buildSectionCommonWidget(
                   title:
@@ -37,7 +37,7 @@ class BossWorkplaceMainView extends BaseView<BossWorkplaceMainViewModel> {
                   allView: () {
                     print("현재 근무자 전체보기");
                   }),
-              const SizedBox(height: 40),
+              const SizedBox(height: 60),
               _buildSectionCommonWidget(
                   title:
                       "오늘 완료된 할 일 ${controller.workplace.value.completedTodos?.length ?? 0}/${controller.workplace.value.totalTodoCount}",
@@ -45,7 +45,7 @@ class BossWorkplaceMainView extends BaseView<BossWorkplaceMainViewModel> {
                       (index) => _buildCompletedTodo(controller.workplace.value.completedTodos![index])),
                   emptyText: '완료된 할 일이 없어요.',
                   allView: () {}),
-              const SizedBox(height: 40),
+              const SizedBox(height: 80),
             ],
           ),
         ));
@@ -54,11 +54,11 @@ class BossWorkplaceMainView extends BaseView<BossWorkplaceMainViewModel> {
   /// 메뉴 아이콘 그리드뷰
   Widget _tabView() {
     var iconList = [
-      _buildMenuIconTab(Icons.check_box, const Color(0xff6579C1), "할 일 관리", () => controller.startTodoListView()),
-      _buildMenuIconTab(
-          Icons.watch_later, const Color(0xffE36D78), "근무 관리", () => controller.startWorkHistoryListView()),
       _buildMenuIconTab(Icons.notification_important_rounded, const Color(0xff2E85F9), "요청 관리",
           () => controller.startRequestListView()),
+      _buildMenuIconTab(
+          Icons.watch_later, const Color(0xffE36D78), "근무 관리", () => controller.startWorkHistoryListView()),
+      _buildMenuIconTab(Icons.check_box, const Color(0xff6579C1), "할 일 관리", () => controller.startTodoListView()),
       _buildMenuIconTab(Icons.settings, const Color(0xff1FBCC3), "일터 관리", () {}),
       _buildMenuIconTab(Icons.people, const Color(0xffC764D5), "직원 관리", () {}),
       _buildMenuIconTab(Icons.person, const Color(0xff886DE5), "프로필 관리", () {})
@@ -70,7 +70,7 @@ class BossWorkplaceMainView extends BaseView<BossWorkplaceMainViewModel> {
         shrinkWrap: true,
         itemCount: iconList.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3, childAspectRatio: 1.3, mainAxisSpacing: 0, crossAxisSpacing: 0),
+            crossAxisCount: 3, childAspectRatio: 1.4, mainAxisSpacing: 20, crossAxisSpacing: 0),
         itemBuilder: (context, index) {
           return iconList[index];
         },
@@ -111,10 +111,10 @@ class BossWorkplaceMainView extends BaseView<BossWorkplaceMainViewModel> {
           ],
         ),
       ),
-      const SizedBox(height: 10),
+      const SizedBox(height: 20),
       list.isEmpty
           ? Container(
-              padding: const EdgeInsets.only(top: 10),
+              padding: const EdgeInsets.only(top: 20),
               child: Text(emptyText, style: const TextStyle(color: Colors.grey)))
           : SizedBox(
               width: double.infinity,
@@ -132,14 +132,16 @@ class BossWorkplaceMainView extends BaseView<BossWorkplaceMainViewModel> {
   /// 새로운 요청 아이템
   Widget _buildRequestView(WorkplaceRequestSimpleResponseDTO request) {
     var title = request.requestType?.getRequestTypeText() ?? '';
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
-      child: Container(
-        decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(4)),
-            border: Border.fromBorderSide(BorderSide(color: Colors.black26))),
+    return GestureDetector(
+      // 요청 자세히 보기
+      onTap: () => controller.startRequestDetailView(request.requestId!),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5),
         child: Container(
-          margin: const EdgeInsets.all(15),
+          padding: const EdgeInsets.all(15),
+          decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(4)),
+              border: Border.fromBorderSide(BorderSide(color: Colors.black26))),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -151,7 +153,7 @@ class BossWorkplaceMainView extends BaseView<BossWorkplaceMainViewModel> {
                   const SizedBox(width: 10)
                 ],
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
               Text(title),
             ],
           ),
@@ -166,26 +168,24 @@ class BossWorkplaceMainView extends BaseView<BossWorkplaceMainViewModel> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Container(
+        padding: const EdgeInsets.all(15),
         decoration: const BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(4)),
             border: Border.fromBorderSide(BorderSide(color: Colors.black26))),
-        child: Container(
-          margin: const EdgeInsets.all(15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  AvatarWidget(thumbPath: employee.currentEmployee!.imageUrl, type: AvatarType.type1, size: 25),
-                  const SizedBox(width: 10),
-                  Text('${employee.currentEmployee!.name}(${employee.currentEmployee!.rankName})'),
-                  const SizedBox(width: 10)
-                ],
-              ),
-              const SizedBox(height: 10),
-              Text(title),
-            ],
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                AvatarWidget(thumbPath: employee.currentEmployee!.imageUrl, type: AvatarType.type1, size: 25),
+                const SizedBox(width: 10),
+                Text('${employee.currentEmployee!.name}(${employee.currentEmployee!.rankName})'),
+                const SizedBox(width: 10)
+              ],
+            ),
+            const SizedBox(height: 10),
+            Text(title),
+          ],
         ),
       ),
     );
@@ -196,26 +196,24 @@ class BossWorkplaceMainView extends BaseView<BossWorkplaceMainViewModel> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Container(
+        padding: const EdgeInsets.all(15),
         decoration: const BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(4)),
             border: Border.fromBorderSide(BorderSide(color: Colors.black26))),
-        child: Container(
-          margin: const EdgeInsets.all(15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  AvatarWidget(thumbPath: todo.completedMember!.imageUrl, type: AvatarType.type1, size: 25),
-                  const SizedBox(width: 10),
-                  Text('${todo.completedMember!.name}(${todo.completedMember!.rankName})'),
-                  const SizedBox(width: 10)
-                ],
-              ),
-              const SizedBox(height: 10),
-              Text(todo.todoTitle ?? ''),
-            ],
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                AvatarWidget(thumbPath: todo.completedMember!.imageUrl, type: AvatarType.type1, size: 25),
+                const SizedBox(width: 10),
+                Text('${todo.completedMember!.name}(${todo.completedMember!.rankName})'),
+                const SizedBox(width: 10)
+              ],
+            ),
+            const SizedBox(height: 10),
+            Text(todo.todoTitle ?? ''),
+          ],
         ),
       ),
     );

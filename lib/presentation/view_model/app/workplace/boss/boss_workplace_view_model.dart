@@ -4,10 +4,12 @@ import 'package:albanote_project/domain/repository/remote/workplace_repository.d
 import 'package:albanote_project/etc/custom_class/BaseController.dart';
 import 'package:albanote_project/etc/error_codes.dart';
 import 'package:albanote_project/presentation/view/app/workplace/boss/create_workplace/create_workplace_view.dart';
+import 'package:albanote_project/presentation/view/app/workplace/boss/request/boss_workplace_request_detail_view.dart';
 import 'package:albanote_project/presentation/view/app/workplace/boss/request/boss_workplace_request_list_view.dart';
 import 'package:albanote_project/presentation/view/app/workplace/boss/todo/boss_workplace_todo_list_view.dart';
 import 'package:albanote_project/presentation/view/app/workplace/boss/work_history/boss_workplace_work_history_list_view.dart';
 import 'package:albanote_project/presentation/view_model/app/workplace/boss/create_workplace_view_model.dart';
+import 'package:albanote_project/presentation/view_model/app/workplace/boss/request/boss_workplace_request_detail_view_model.dart';
 import 'package:albanote_project/presentation/view_model/app/workplace/boss/request/boss_workplace_request_list_view_model.dart';
 import 'package:albanote_project/presentation/view_model/app/workplace/boss/todo/boss_workplace_todo_list_view_model.dart';
 import 'package:albanote_project/presentation/view_model/app/workplace/boss/work_history/boss_workplace_todo_list_view_model.dart';
@@ -49,7 +51,6 @@ class BossWorkplaceMainViewModel extends BaseViewModel {
   }
 
   /// 할일 리스트 화면으로 이동
-
   void startTodoListView() {
     Get.to(
       const BossWorkplaceTodoListView(),
@@ -68,12 +69,35 @@ class BossWorkplaceMainViewModel extends BaseViewModel {
   }
 
   /// 요청 리스트 화면으로 이동
-  void startRequestListView() {
-    Get.to(
+  void startRequestListView() async {
+    var result = await Get.to(
       const BossWorkplaceRequestListView(),
       arguments: {'workplaceId': workplace.value.workplaceId!},
       binding: BindingsBuilder(() => {Get.put(BossWorkplaceRequestViewModel(_workplaceOfBossRepository))}),
     );
+    // 리스트화면에서 응답한 요청은 리스트에서 제거
+    if (result is Map<String, dynamic>) {
+      var completeList = result['completeList'] as List<int>;
+      for (var requestId in completeList) {
+        workplace.value.workplaceRequest?.removeWhere((e) => e.requestId == requestId);
+      }
+      workplace.refresh();
+    }
+  }
+
+  /// 요청 상세화면 이동
+  void startRequestDetailView(int requestId) async {
+    var result = await Get.to(const BossWorkplaceRequestDetailView(),
+        binding: BindingsBuilder(
+            (() => {Get.put(BossWorkplaceRequestDetailViewModel(_workplaceOfBossRepository, requestId))})));
+    // 완료된 요청 화면에서 제거
+    if (result is Map<String, dynamic>) {
+      var isComplete = result['isComplete'];
+      if (isComplete != null) {
+        workplace.value.workplaceRequest?.removeWhere((e) => e.requestId == result['requestId']);
+        workplace.refresh();
+      }
+    }
   }
 
   /// 사장 일터 생성화면 이동

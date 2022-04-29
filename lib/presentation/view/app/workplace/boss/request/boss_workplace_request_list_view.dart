@@ -18,53 +18,59 @@ class BossWorkplaceRequestListView extends BaseView<BossWorkplaceRequestViewMode
     controller.workplaceId = (Get.arguments as Map<String, int>)['workplaceId']!;
     controller.getWorkplaceRequestList();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: buildBaseAppBar(title: "전체 요청"),
-      body: progressWidget(
-        child: Container(
-          decoration: const BoxDecoration(border: Border(top: BorderSide(color: Colors.black12))),
-          child: Obx(
-            () => controller.pageRequest.value.isEmpty
-                ? const Center(child: Text('받은 요청이 없습니다.'))
-                : disallowIndicatorScrollView(
-                    controller: controller.scrollController,
-                    padding: const EdgeInsets.only(bottom: 50),
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Obx(
-                        () => Padding(
-                          padding: const EdgeInsets.only(top: 10, right: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                width: 30,
-                                height: 30,
-                                child: Radio(
-                                  onChanged: (value) => controller.onFilterChange(value as bool),
-                                  groupValue: controller.isOnlyIncomplete.value,
-                                  value: false,
+    return WillPopScope(
+      onWillPop: () async {
+        controller.backPress();
+        return true;
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: buildBaseAppBar(title: "전체 요청", onBackPress: () => controller.backPress()),
+        body: progressWidget(
+          child: Container(
+            decoration: const BoxDecoration(border: Border(top: BorderSide(color: Colors.black12))),
+            child: Obx(
+              () => controller.pageRequest.value.isEmpty
+                  ? const Center(child: Text('받은 요청이 없습니다.'))
+                  : disallowIndicatorScrollView(
+                      controller: controller.scrollController,
+                      padding: const EdgeInsets.only(bottom: 50),
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                        Obx(
+                          () => Padding(
+                            padding: const EdgeInsets.only(top: 10, right: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: 30,
+                                  height: 30,
+                                  child: Radio(
+                                    onChanged: (value) => controller.onFilterChange(value as bool),
+                                    groupValue: controller.isOnlyIncomplete.value,
+                                    value: false,
+                                  ),
                                 ),
-                              ),
-                              const Text('전체 요청'),
-                              const SizedBox(width: 10),
-                              SizedBox(
-                                width: 30,
-                                height: 30,
-                                child: Radio(
-                                  onChanged: (value) => controller.onFilterChange(value as bool),
-                                  groupValue: controller.isOnlyIncomplete.value,
-                                  value: true,
+                                const Text('전체 요청'),
+                                const SizedBox(width: 10),
+                                SizedBox(
+                                  width: 30,
+                                  height: 30,
+                                  child: Radio(
+                                    onChanged: (value) => controller.onFilterChange(value as bool),
+                                    groupValue: controller.isOnlyIncomplete.value,
+                                    value: true,
+                                  ),
                                 ),
-                              ),
-                              const Text('대기 요청')
-                            ],
+                                const Text('대기 요청')
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      ..._buildAllRequest(),
-                    ])),
+                        ..._buildAllRequest(),
+                      ])),
+            ),
           ),
         ),
       ),

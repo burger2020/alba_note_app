@@ -9,6 +9,12 @@ class BossWorkplaceWorkHistoryListViewModel extends BaseViewModel {
 
   final WorkplaceOfBossRepository _workplaceOfBossRepository;
 
-  RxInt workplaceWorkHistory = 1.obs;
+  late int workplaceId;
+
   PageRequestModel pageRequest = PageRequestModel();
+  var searchDate = DateTime.now();
+
+  Future getWorkRecordsByDate() async {
+    var result = await _workplaceOfBossRepository.getWorkRecordsByDate(workplaceId, searchDate, pageRequest);
+  }
 }

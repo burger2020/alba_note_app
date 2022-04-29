@@ -1,5 +1,4 @@
 import 'package:albanote_project/domain/model/coordinate_model.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'create_workplace_request_dto.freezed.dart';

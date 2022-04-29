@@ -1,9 +1,10 @@
 import 'package:albanote_project/etc/custom_class/base_view.dart';
+import 'package:albanote_project/presentation/view_model/app/workplace/boss/todo/boss_workplace_todo_list_view_model.dart';
 import 'package:albanote_project/presentation/view_model/app/workplace/boss/work_history/boss_workplace_todo_list_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class BossWorkplaceTodoListView extends BaseView<BossWorkplaceWorkHistoryListViewModel> {
+class BossWorkplaceTodoListView extends BaseView<BossWorkplaceTodoListViewModel> {
   const BossWorkplaceTodoListView({Key? key}) : super(key: key);
 
   @override

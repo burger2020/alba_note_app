@@ -8,10 +8,11 @@ abstract class BaseView<T extends BaseViewModel> extends GetView<T> {
   const BaseView({Key? key}) : super(key: key);
 
   /// overscroll never
-  Widget disallowIndicatorScrollView({required Widget child,
-    ScrollController? controller,
-    EdgeInsets? padding,
-    Axis scrollDirection = Axis.vertical}) {
+  Widget disallowIndicatorScrollView(
+      {required Widget child,
+      ScrollController? controller,
+      EdgeInsets? padding,
+      Axis scrollDirection = Axis.vertical}) {
     return disallowIndicatorWidget(
       child: SingleChildScrollView(
           controller: controller, padding: padding, child: child, scrollDirection: scrollDirection),
@@ -29,11 +30,12 @@ abstract class BaseView<T extends BaseViewModel> extends GetView<T> {
   }
 
   /// 기본 앱바 생성
-  AppBar buildBaseAppBar({required String title,
-    TextStyle? textStyle,
-    IconData? leadIcon = Icons.close,
-    List<Widget>? actions,
-    Function? onBackPress}) {
+  AppBar buildBaseAppBar(
+      {required String title,
+      TextStyle? textStyle,
+      IconData? leadIcon = Icons.close,
+      List<Widget>? actions,
+      Function? onBackPress}) {
     return AppBar(
       backgroundColor: Colors.white,
       actions: actions ?? [],
@@ -44,14 +46,14 @@ abstract class BaseView<T extends BaseViewModel> extends GetView<T> {
       leading: leadIcon == null
           ? Container()
           : GestureDetector(
-          child: Icon(leadIcon, color: Colors.black),
-          onTap: () {
-            if (onBackPress == null) {
-              Get.back();
-            } else {
-              onBackPress.call();
-            }
-          }),
+              child: Icon(leadIcon, color: Colors.black),
+              onTap: () {
+                if (onBackPress == null) {
+                  Get.back();
+                } else {
+                  onBackPress.call();
+                }
+              }),
       shape: const Border(bottom: BorderSide(color: Colors.black12)),
     );
   }
@@ -63,20 +65,22 @@ abstract class BaseView<T extends BaseViewModel> extends GetView<T> {
       Obx(() {
         return controller.isProgress
             ? Container(
-            child: const Center(child: CircularProgressIndicator()),
-            decoration: const BoxDecoration(color: Colors.black12))
+                child: const Center(child: CircularProgressIndicator()),
+                decoration: const BoxDecoration(color: Colors.black12))
             : Container();
       }),
     ]);
   }
 
   /// 버튼
-  Widget buildBottomButton({required String text,
+  Widget buildBottomButton({
+    required String text,
     required bool isEnable,
     required Function? onPositiveTab,
     bool isBorder = false,
     String? negativeButtonText,
-    Function? onNegativeTab}) {
+    Function? onNegativeTab,
+  }) {
     Color buttonColor = Colors.grey;
     if (isEnable) buttonColor = MyColors.primary;
 
@@ -89,14 +93,13 @@ abstract class BaseView<T extends BaseViewModel> extends GetView<T> {
         children: [
           negativeButtonText != null && onNegativeTab != null
               ? Container(
-            margin: const EdgeInsets.only(bottom: 20),
-            child: GestureDetector(
-
-              /// 지정 취소 버튼
-              child: Text(negativeButtonText, style: const TextStyle(fontSize: 13, color: Colors.grey)),
-              onTap: () => onNegativeTab(),
-            ),
-          )
+                  margin: const EdgeInsets.only(bottom: 20),
+                  child: GestureDetector(
+                    /// 지정 취소 버튼
+                    child: Text(negativeButtonText, style: const TextStyle(fontSize: 13, color: Colors.grey)),
+                    onTap: () => onNegativeTab(),
+                  ),
+                )
               : Container(),
           GestureDetector(
             onTap: () => onPositiveTab != null ? onPositiveTab() : {},
@@ -139,15 +142,16 @@ abstract class BaseView<T extends BaseViewModel> extends GetView<T> {
   }
 
   /// 다이얼로그 생성
-  void showAlertDialog({String? title,
-    required String content,
-    String positiveButtonText = "확인",
-    String negativeBtnText = '취소',
-    Color? positiveButtonColor = MyColors.primary,
-    Color negativeButtonColor = Colors.grey,
-    Function? setOnPositiveListener,
-    Function? setOnNegativeListener,
-    bool barrierDismissible = true}) {
+  void showAlertDialog(
+      {String? title,
+      required String content,
+      String positiveButtonText = "확인",
+      String negativeBtnText = '취소',
+      Color? positiveButtonColor = MyColors.primary,
+      Color negativeButtonColor = Colors.grey,
+      Function? setOnPositiveListener,
+      Function? setOnNegativeListener,
+      bool barrierDismissible = true}) {
     showDialog(
         context: Get.context!,
         barrierDismissible: barrierDismissible, // Dialog 를 제외한 다른 화면 터치 x

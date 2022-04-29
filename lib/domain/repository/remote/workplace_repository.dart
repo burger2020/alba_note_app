@@ -30,4 +30,7 @@ abstract class WorkplaceOfBossRepository extends BaseRepository {
 
   /// 일터 요청 메모 내용 변경
   Future<ResponseEntity<bool>> putChangRequestMemo(int requestId, String memo);
+
+  /// 요청 응답
+  Future<ResponseEntity<bool>> putRequestResponse(int requestId, bool isComplete);
 }
